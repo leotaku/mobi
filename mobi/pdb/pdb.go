@@ -31,8 +31,9 @@ func (d *Database) AddRecord(r Record) {
 
 // Write writes out the binary representation of the Palm database to w.
 func (d Database) Write(w io.Writer) error {
+	name := underscoreSpaces(d.Name)
 	rlen := len(d.Records)
-	palmDBHeader := NewPalmDBHeader(d.Name, uint16(rlen), uint32(rlen))
+	palmDBHeader := NewPalmDBHeader(name, uint16(rlen), uint32(rlen)*2-1)
 	err := binary.Write(w, Endian, palmDBHeader)
 	if err != nil {
 		return err
@@ -43,9 +44,9 @@ func (d Database) Write(w io.Writer) error {
 	for i, rec := range d.Records {
 		h := RecordHeader{
 			Offset:    uint32(offset),
-			Attribute: 1,
-			Skip:      0,
-			UniqueID:  uint16(i),
+			Attribute: 0,             // No idea
+			Skip:      0,             // No idea
+			UniqueID:  uint16(i * 2), // Calibre doubles UID for some reason
 		}
 		offset += rec.Length()
 		err := binary.Write(w, Endian, h)

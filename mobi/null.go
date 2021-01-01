@@ -12,7 +12,7 @@ const NullPaddingLength = 8192 // 0x2000
 
 type NullRecord struct {
 	PalmDocHeader t.PalmDocHeader
-	MOBIHeader    t.MOBIHeader
+	MOBIHeader    t.KF8Header
 	FullName      string
 	EXTHSection   EXTHSection
 }
@@ -20,19 +20,19 @@ type NullRecord struct {
 func NewNullRecord(name string) NullRecord {
 	return NullRecord{
 		PalmDocHeader: t.NewPalmDocHeader(),
-		MOBIHeader:    t.NewMOBIHeader(),
+		MOBIHeader:    t.NewKF8Header(),
 		FullName:      name,
 		EXTHSection:   NewEXTHSection(),
 	}
 }
 
 func (n NullRecord) Length() int {
-	return t.PalmDocHeaderLength + t.MOBIHeaderLength + n.EXTHSection.Length() + len(n.FullName) + NullPaddingLength
+	return t.PalmDocHeaderLength + t.KF8HeaderLength + n.EXTHSection.Length() + len(n.FullName) + NullPaddingLength
 }
 
 func (n NullRecord) Write(w io.Writer) error {
 	// Set full name offset and length
-	n.MOBIHeader.FullNameOffset = uint32(t.PalmDocHeaderLength + t.MOBIHeaderLength + n.EXTHSection.Length())
+	n.MOBIHeader.FullNameOffset = uint32(t.PalmDocHeaderLength + t.KF8HeaderLength + n.EXTHSection.Length())
 	n.MOBIHeader.FullNameLength = uint32(len(n.FullName))
 
 	// Write PalmDoc header

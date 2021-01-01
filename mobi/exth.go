@@ -21,7 +21,7 @@ const (
 	EXTHDescription                        = 103
 	EXTHIsbn                               = 104
 	EXTHSubject                            = 105
-	EXTHPublishingdate                     = 106
+	EXTHPublishingDate                     = 106
 	EXTHReview                             = 107
 	EXTHContributor                        = 108
 	EXTHRights                             = 109
@@ -39,7 +39,7 @@ const (
 	EXTHFixedLayout                        = 122
 	EXTHBookType                           = 123
 	EXTHOrientationLock                    = 124
-	EXTHCountResources                     = 125
+	EXTHKF8CountResources                     = 125
 	EXTHOrigResolution                     = 126
 	EXTHZeroGutter                         = 127
 	EXTHZeroMargin                         = 128
@@ -68,7 +68,7 @@ const (
 	EXTHUnknown451                         = 451
 	EXTHUnknown452                         = 452
 	EXTHUnknown453                         = 453
-	EXTHDoctype                            = 501
+	EXTHDocType                            = 501
 	EXTHLastUpdate                         = 502
 	EXTHUpdatedTitle                       = 503
 	EXTHAsin504                            = 504

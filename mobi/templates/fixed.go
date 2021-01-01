@@ -48,7 +48,7 @@ func (r FLISRecord) Length() int {
 	return FLISRecordLength
 }
 
-const FCISRecordLength = 44
+const FCISRecordLength = 52
 
 type FCISRecord struct {
 	FCIS       [4]byte
@@ -60,9 +60,11 @@ type FCISRecord struct {
 	Fixed5     uint32
 	Fixed6     uint32
 	Fixed7     uint32
-	Fixed8     uint16
-	Fixed9     uint16
-	Fixed10    uint32
+	Fixed8     uint32
+	Fixed9     uint32
+	Fixed10    uint16
+	Fixed11    uint16
+	Fixed12    uint32
 }
 
 func NewFCISRecord(TextLength uint32) FCISRecord {
@@ -70,15 +72,17 @@ func NewFCISRecord(TextLength uint32) FCISRecord {
 		FCIS:       [4]byte{'F', 'C', 'I', 'S'},
 		Fixed1:     20,
 		Fixed2:     16,
-		Fixed3:     1,
+		Fixed3:     2,
 		Fixed4:     0,
 		TextLength: TextLength,
 		Fixed5:     0,
-		Fixed6:     32,
-		Fixed7:     8,
-		Fixed8:     1,
-		Fixed9:     1,
-		Fixed10:    0,
+		Fixed6:     40,
+		Fixed7:     0,
+		Fixed8:     40,
+		Fixed9:     8,
+		Fixed10:    1,
+		Fixed11:    1,
+		Fixed12:    0,
 	}
 }
 

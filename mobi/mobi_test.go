@@ -31,11 +31,11 @@ func TestNullRecordLength(t *testing.T) {
 func TestIndexSectionLength(t *testing.T) {
 	indx := tpl.NewINDXHeader(0, 0)
 	tagx := tpl.NewTAGXSingleHeader()
-	idtx := tpl.NewIDXTHeader(0)
+	idtx := tpl.NewIDXTSingleHeader(0)
 
 	assertEq(t, measure(indx), tpl.INDXHeaderLength)
 	assertEq(t, measure(tagx), tpl.TAGXSingleHeaderLength)
-	assertEq(t, measure(idtx), tpl.IDXTHeaderLength)
+	assertEq(t, measure(idtx), tpl.IDXTSingleHeaderLength)
 }
 
 func TestNullRecordLengthWithEXTH(t *testing.T) {
@@ -46,6 +46,54 @@ func TestNullRecordLengthWithEXTH(t *testing.T) {
 	nr.Write(buf)
 
 	assertEq(t, nr.Length(), len(buf.Bytes()))
+}
+
+func TestIndexHeaderRecordLength(t *testing.T) {
+	hr := mobi.SkeletonHeaderIndexRecord(0)
+	buf := bytes.NewBuffer(nil)
+	hr.Write(buf)
+
+	assertEq(t, hr.Length(), len(buf.Bytes()))
+	assertEq(t, hr.Length()%4, 0)
+}
+
+func TestSkeletonHeaderRecordLength(t *testing.T) {
+	sr := mobi.SkeletonIndexRecord(nil)
+	buf := bytes.NewBuffer(nil)
+	sr.Write(buf)
+
+	assertEq(t, sr.Length(), len(buf.Bytes()))
+	assertEq(t, sr.Length()%4, 0)
+}
+
+func TestSkeletonHeaderRecordLengthWithChapter(t *testing.T) {
+	chunk := mobi.ChunkInfo{
+		PreStart:      0,
+		PreLength:     100,
+		ContentStart:  100,
+		ContentLength: 100,
+	}
+	sr := mobi.SkeletonIndexRecord([]mobi.ChunkInfo{chunk})
+	buf := bytes.NewBuffer(nil)
+	sr.Write(buf)
+
+	assertEq(t, sr.Length(), len(buf.Bytes()))
+	assertEq(t, sr.Length()%4, 0)
+}
+
+func TestSkeletonHeaderRecordLengthWithChapters(t *testing.T) {
+	chunk := mobi.ChunkInfo{
+		PreStart:      0,
+		PreLength:     100,
+		ContentStart:  100,
+		ContentLength: 100,
+	}
+	sr := mobi.SkeletonIndexRecord([]mobi.ChunkInfo{chunk, chunk, chunk})
+	buf := bytes.NewBuffer(nil)
+	sr.Write(buf)
+
+	assertEq(t, sr.Length(), len(buf.Bytes()))
+	assertEq(t, sr.Length()%4, 0)
 }
 
 func TestReadWrite(t *testing.T) {
