@@ -1,4 +1,4 @@
-package mobi
+package records
 
 import (
 	"bytes"

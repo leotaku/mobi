@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/leotaku/manki/mobi/pdb"
+	r "github.com/leotaku/manki/mobi/records"
 	t "github.com/leotaku/manki/mobi/templates"
 )
 
@@ -43,27 +44,27 @@ func (m MobiBook) Realize() pdb.Database {
 	}
 
 	// Chunk record
-	chunk, cncx := ChunkIndexRecord(info)
-	ch := ChunkHeaderIndexRecord(len(m.text), len(m.Chapters))
+	chunk, cncx := r.ChunkIndexRecord(info)
+	ch := r.ChunkHeaderIndexRecord(len(m.text), len(m.Chapters))
 	db.AddRecord(ch)
 	db.AddRecord(chunk)
 	db.AddRecord(cncx)
 
 	// Skeleton record
-	skeleton := SkeletonIndexRecord(info)
-	sh := SkeletonHeaderIndexRecord(len(skeleton.IDXTEntries))
+	skeleton := r.SkeletonIndexRecord(info)
+	sh := r.SkeletonHeaderIndexRecord(len(skeleton.IDXTEntries))
 	db.AddRecord(sh)
 	db.AddRecord(skeleton)
 
 	// Image records
 	for _, img := range m.Images {
-		rec := NewImageRecord(img)
+		rec := r.NewImageRecord(img)
 		db.AddRecord(rec)
 	}
 
 	// Trailing records
 	flows := append([]string{html}, m.ExtraFlows...)
-	db.AddRecord(NewFDSTRecord(flows...))
+	db.AddRecord(r.NewFDSTRecord(flows...))
 	db.AddRecord(t.NewFLISRecord())
 	db.AddRecord(t.NewFCISRecord(uint32(len(m.text))))
 	db.AddRecord(t.EOFRecord)
@@ -71,16 +72,16 @@ func (m MobiBook) Realize() pdb.Database {
 	return db
 }
 
-func (m *MobiBook) createNullRecord() NullRecord {
+func (m *MobiBook) createNullRecord() r.NullRecord {
 	// Variables
-	null := NewNullRecord(m.Title)
+	null := r.NewNullRecord(m.Title)
 	ltr := len(m.textRecords)  // Last text record
 	lir := ltr + 5             // Last index record
 	lcr := lir + len(m.Images) // Last contentful record
 
 	// PalmDoc header
 	null.PalmDocHeader.TextLength = uint32(len(m.text))
-	null.PalmDocHeader.TextRecordCount = uint16(ltr - 1)
+	null.PalmDocHeader.TextRecordCount = uint16(ltr - 1) // TODO
 
 	// MOBI header
 	if len(m.Images) > 0 {
@@ -109,20 +110,20 @@ func (m *MobiBook) createNullRecord() NullRecord {
 
 	// EXTH header
 	// null.EXTHSection.AddString(EXTHTitle, m.Title)
-	null.EXTHSection.AddString(EXTHAuthor, m.Author)
-	null.EXTHSection.AddString(EXTHUpdatedTitle, m.Title)
-	null.EXTHSection.AddString(EXTHDocType, "EBOK")
-	null.EXTHSection.AddString(EXTHLanguage, "en")
-	null.EXTHSection.AddString(EXTHPublishingDate, "2020-12-31T14:45:45.113077+00:00")
-	null.EXTHSection.AddString(EXTHContributor, "calibre (4.23.0) [https://calibre-ebook.com]")
-	null.EXTHSection.AddString(EXTHSource, "calibre:1c984ebb-d396-46c8-9773-456f57e012de")
-	null.EXTHSection.AddString(EXTHAsin, "1c984ebb-d396-46c8-9773-456f57e012de")
-	null.EXTHSection.AddInt(EXTHKF8CountResources, 0)
-	null.EXTHSection.AddInt(EXTHCreatorSoftware, 201)
-	null.EXTHSection.AddInt(EXTHCreatorMajor, 2)
-	null.EXTHSection.AddInt(EXTHCreatorMinor, 9)
-	null.EXTHSection.AddInt(EXTHCreatorBuild, 0)
-	null.EXTHSection.AddString(EXTHCreatorBuildRev, "0730-890adc2")
+	null.EXTHSection.AddString(t.EXTHAuthor, m.Author)
+	null.EXTHSection.AddString(t.EXTHUpdatedTitle, m.Title)
+	null.EXTHSection.AddString(t.EXTHDocType, "EBOK")
+	null.EXTHSection.AddString(t.EXTHLanguage, "en")
+	null.EXTHSection.AddString(t.EXTHPublishingDate, "2020-12-31T14:45:45.113077+00:00")
+	null.EXTHSection.AddString(t.EXTHContributor, "calibre (4.23.0) [https://calibre-ebook.com]")
+	null.EXTHSection.AddString(t.EXTHSource, "calibre:1c984ebb-d396-46c8-9773-456f57e012de")
+	null.EXTHSection.AddString(t.EXTHAsin, "1c984ebb-d396-46c8-9773-456f57e012de")
+	null.EXTHSection.AddInt(t.EXTHKF8CountResources, 0)
+	null.EXTHSection.AddInt(t.EXTHCreatorSoftware, 201)
+	null.EXTHSection.AddInt(t.EXTHCreatorMajor, 2)
+	null.EXTHSection.AddInt(t.EXTHCreatorMinor, 9)
+	null.EXTHSection.AddInt(t.EXTHCreatorBuild, 0)
+	null.EXTHSection.AddString(t.EXTHCreatorBuildRev, "0730-890adc2")
 	if m.CoverImage <= len(m.Images) {
 		// null.EXTHSection.AddInt(EXTHCoverOffset, m.CoverImage)
 		// null.EXTHSection.AddInt(EXTHThumbOffset, m.CoverImage)

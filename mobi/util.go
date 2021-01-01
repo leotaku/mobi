@@ -1,11 +1,10 @@
 package mobi
 
 import (
-	"encoding/binary"
 	"fmt"
-	"io"
 
 	"github.com/leotaku/manki/mobi/pdb"
+	r "github.com/leotaku/manki/mobi/records"
 )
 
 const preHTML = `<?xml version="1.0" encoding="UTF-8"?>
@@ -20,19 +19,12 @@ const preHTML = `<?xml version="1.0" encoding="UTF-8"?>
     </body>
 </html>`
 
-type ChunkInfo struct {
-	PreStart      int
-	PreLength     int
-	ContentStart  int
-	ContentLength int
-}
-
-func chaptersToText(c []Chapter) (string, []ChunkInfo) {
+func chaptersToText(chaps []Chapter) (string, []r.ChunkInfo) {
 	text := ""
-	info := make([]ChunkInfo, 0)
-	for i, chap := range c {
+	info := make([]r.ChunkInfo, 0)
+	for i, chap := range chaps {
 		pre := fmt.Sprintf(preHTML, i)
-		info = append(info, ChunkInfo{
+		info = append(info, r.ChunkInfo{
 			PreStart:      len(text),
 			PreLength:     len(pre),
 			ContentStart:  len(text) + len(pre),
@@ -52,16 +44,16 @@ func genTextRecords(html string) []pdb.Record {
 		return b
 	}
 	records := []pdb.Record{}
-	recordCount := len(html) / TextRecordMaxSize
-	if len(html)%TextRecordMaxSize != 0 {
+	recordCount := len(html) / r.TextRecordMaxSize
+	if len(html)%r.TextRecordMaxSize != 0 {
 		recordCount += 1
 	}
 
 	for i := 0; i < int(recordCount); i++ {
-		from := i * TextRecordMaxSize
-		to := from + TextRecordMaxSize
+		from := i * r.TextRecordMaxSize
+		to := from + r.TextRecordMaxSize
 
-		record := NewTBSTextRecord(html[from:min(to, len(html))])
+		record := r.NewTBSTextRecord(html[from:min(to, len(html))])
 		records = append(records, record)
 	}
 
@@ -72,42 +64,4 @@ func genTextRecords(html string) []pdb.Record {
 	}
 
 	return records
-}
-
-func encodeVwi(x int) []byte {
-	buf := make([]byte, 64)
-	z := 0
-	for {
-		buf[z] = byte(x) & 0x7f
-		x >>= 7
-		z++
-		if x == 0 {
-			buf[0] |= 0x80
-			break
-		}
-	}
-
-	relevant := buf[:z]
-	reverseBytes(relevant)
-	return relevant
-}
-
-func reverseBytes(buf []byte) {
-	for i, j := 0, len(buf)-1; i < j; i, j = i+1, j-1 {
-		buf[i], buf[j] = buf[j], buf[i]
-	}
-}
-
-func invMod(dividend int, divisor int) int {
-	return (divisor/2 + dividend) % divisor
-}
-
-func writeSequential(w io.Writer, bo binary.ByteOrder, vs ...interface{}) error {
-	for _, v := range vs {
-		err := binary.Write(w, bo, v)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }

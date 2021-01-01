@@ -5,9 +5,9 @@ import (
 	"encoding/binary"
 	"testing"
 
-	"github.com/leotaku/manki/mobi"
 	"github.com/leotaku/manki/mobi/pdb"
-	tpl "github.com/leotaku/manki/mobi/templates"
+	"github.com/leotaku/manki/mobi/records"
+	"github.com/leotaku/manki/mobi/templates"
 )
 
 func TestPDBHeaderLength(t *testing.T) {
@@ -21,7 +21,7 @@ func TestRecordHeaderLength(t *testing.T) {
 }
 
 func TestNullRecordLength(t *testing.T) {
-	nr := mobi.NewNullRecord("Foo")
+	nr := records.NewNullRecord("Foo")
 	buf := bytes.NewBuffer(nil)
 	nr.Write(buf)
 
@@ -29,19 +29,19 @@ func TestNullRecordLength(t *testing.T) {
 }
 
 func TestIndexSectionLength(t *testing.T) {
-	indx := tpl.NewINDXHeader(0, 0)
-	tagx := tpl.NewTAGXSingleHeader()
-	idtx := tpl.NewIDXTSingleHeader(0)
+	indx := templates.NewINDXHeader(0, 0)
+	tagx := templates.NewTAGXSingleHeader()
+	idtx := templates.NewIDXTSingleHeader(0)
 
-	assertEq(t, measure(indx), tpl.INDXHeaderLength)
-	assertEq(t, measure(tagx), tpl.TAGXSingleHeaderLength)
-	assertEq(t, measure(idtx), tpl.IDXTSingleHeaderLength)
+	assertEq(t, measure(indx), templates.INDXHeaderLength)
+	assertEq(t, measure(tagx), templates.TAGXSingleHeaderLength)
+	assertEq(t, measure(idtx), templates.IDXTSingleHeaderLength)
 }
 
 func TestNullRecordLengthWithEXTH(t *testing.T) {
-	nr := mobi.NewNullRecord("Foo")
-	nr.EXTHSection.AddString(mobi.EXTHTitle, "BookTitle")
-	nr.EXTHSection.AddInt(mobi.EXTHAdult, 0)
+	nr := records.NewNullRecord("Foo")
+	nr.EXTHSection.AddString(templates.EXTHTitle, "BookTitle")
+	nr.EXTHSection.AddInt(templates.EXTHAdult, 0)
 	buf := bytes.NewBuffer(nil)
 	nr.Write(buf)
 
@@ -49,7 +49,7 @@ func TestNullRecordLengthWithEXTH(t *testing.T) {
 }
 
 func TestIndexHeaderRecordLength(t *testing.T) {
-	hr := mobi.SkeletonHeaderIndexRecord(0)
+	hr := records.SkeletonHeaderIndexRecord(0)
 	buf := bytes.NewBuffer(nil)
 	hr.Write(buf)
 
@@ -58,7 +58,7 @@ func TestIndexHeaderRecordLength(t *testing.T) {
 }
 
 func TestSkeletonHeaderRecordLength(t *testing.T) {
-	sr := mobi.SkeletonIndexRecord(nil)
+	sr := records.SkeletonIndexRecord(nil)
 	buf := bytes.NewBuffer(nil)
 	sr.Write(buf)
 
@@ -67,13 +67,13 @@ func TestSkeletonHeaderRecordLength(t *testing.T) {
 }
 
 func TestSkeletonHeaderRecordLengthWithChapter(t *testing.T) {
-	chunk := mobi.ChunkInfo{
+	chunk := records.ChunkInfo{
 		PreStart:      0,
 		PreLength:     100,
 		ContentStart:  100,
 		ContentLength: 100,
 	}
-	sr := mobi.SkeletonIndexRecord([]mobi.ChunkInfo{chunk})
+	sr := records.SkeletonIndexRecord([]records.ChunkInfo{chunk})
 	buf := bytes.NewBuffer(nil)
 	sr.Write(buf)
 
@@ -82,13 +82,13 @@ func TestSkeletonHeaderRecordLengthWithChapter(t *testing.T) {
 }
 
 func TestSkeletonHeaderRecordLengthWithChapters(t *testing.T) {
-	chunk := mobi.ChunkInfo{
+	chunk := records.ChunkInfo{
 		PreStart:      0,
 		PreLength:     100,
 		ContentStart:  100,
 		ContentLength: 100,
 	}
-	sr := mobi.SkeletonIndexRecord([]mobi.ChunkInfo{chunk, chunk, chunk})
+	sr := records.SkeletonIndexRecord([]records.ChunkInfo{chunk, chunk, chunk})
 	buf := bytes.NewBuffer(nil)
 	sr.Write(buf)
 
