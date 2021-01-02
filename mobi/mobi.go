@@ -8,7 +8,7 @@ import (
 
 	"github.com/leotaku/manki/mobi/pdb"
 	r "github.com/leotaku/manki/mobi/records"
-	t "github.com/leotaku/manki/mobi/templates"
+	t "github.com/leotaku/manki/mobi/types"
 	"golang.org/x/text/language"
 )
 

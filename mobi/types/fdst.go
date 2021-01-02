@@ -1,4 +1,4 @@
-package templates
+package types
 
 const FDSTHeaderLength = 12 // 0x0C
 

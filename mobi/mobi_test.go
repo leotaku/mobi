@@ -8,7 +8,7 @@ import (
 
 	"github.com/leotaku/manki/mobi/pdb"
 	"github.com/leotaku/manki/mobi/records"
-	"github.com/leotaku/manki/mobi/templates"
+	"github.com/leotaku/manki/mobi/types"
 )
 
 func TestPDBHeaderLength(t *testing.T) {
@@ -30,19 +30,19 @@ func TestNullRecordLength(t *testing.T) {
 }
 
 func TestIndexSectionLength(t *testing.T) {
-	indx := templates.NewINDXHeader(0, 0)
-	tagx := templates.NewTAGXSingleHeader()
-	idtx := templates.NewIDXTSingleHeader(0)
+	indx := types.NewINDXHeader(0, 0)
+	tagx := types.NewTAGXSingleHeader()
+	idtx := types.NewIDXTSingleHeader(0)
 
-	assertEq(t, measure(indx), templates.INDXHeaderLength)
-	assertEq(t, measure(tagx), templates.TAGXSingleHeaderLength)
-	assertEq(t, measure(idtx), templates.IDXTSingleHeaderLength)
+	assertEq(t, measure(indx), types.INDXHeaderLength)
+	assertEq(t, measure(tagx), types.TAGXSingleHeaderLength)
+	assertEq(t, measure(idtx), types.IDXTSingleHeaderLength)
 }
 
 func TestNullRecordLengthWithEXTH(t *testing.T) {
 	nr := records.NewNullRecord("Foo")
-	nr.EXTHSection.AddString(templates.EXTHTitle, "BookTitle")
-	nr.EXTHSection.AddInt(templates.EXTHAdult, 0)
+	nr.EXTHSection.AddString(types.EXTHTitle, "BookTitle")
+	nr.EXTHSection.AddInt(types.EXTHAdult, 0)
 	buf := bytes.NewBuffer(nil)
 	nr.Write(buf)
 

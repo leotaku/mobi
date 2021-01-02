@@ -5,7 +5,7 @@ import (
 	"io"
 
 	"github.com/leotaku/manki/mobi/pdb"
-	t "github.com/leotaku/manki/mobi/templates"
+	t "github.com/leotaku/manki/mobi/types"
 )
 
 const NullPaddingLength = 8192 // 0x2000
