@@ -18,18 +18,18 @@ func NewEXTHSection() EXTHSection {
 	}
 }
 
-func (sec *EXTHSection) AddString(tp t.EXTHEntryType, s string) {
+func (e *EXTHSection) AddString(tp t.EXTHEntryType, s string) {
 	if len(s) > 0 {
 		entry := NewEXTHEntry(tp, []byte(s))
-		sec.entries = append(sec.entries, entry)
+		e.entries = append(e.entries, entry)
 	}
 }
 
-func (sec *EXTHSection) AddInt(tp t.EXTHEntryType, i int) {
+func (e *EXTHSection) AddInt(tp t.EXTHEntryType, i int) {
 	data := make([]byte, 4)
 	pdb.Endian.PutUint32(data, uint32(i))
 	entry := NewEXTHEntry(tp, data)
-	sec.entries = append(sec.entries, entry)
+	e.entries = append(e.entries, entry)
 }
 
 func (e EXTHSection) LengthWithoutPadding() int {
