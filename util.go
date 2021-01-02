@@ -43,7 +43,7 @@ func textToRecords(html string) []pdb.Record {
 	records := []pdb.Record{}
 	recordCount := len(html) / r.TextRecordMaxSize
 	if len(html)%r.TextRecordMaxSize != 0 {
-		recordCount += 1
+		recordCount++
 	}
 
 	for i := 0; i < int(recordCount); i++ {

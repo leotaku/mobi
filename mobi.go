@@ -206,7 +206,7 @@ func (m MobiBook) createNullRecord() r.NullRecord {
 		null.EXTHSection.AddInt(t.EXTHCoverOffset, lastImageID)
 		null.EXTHSection.AddInt(t.EXTHHasFakeCover, 0)
 		null.EXTHSection.AddString(t.EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%04v", lastImageID+1))
-		lastImageID += 1
+		lastImageID++
 	}
 	if m.ThumbImage != nil {
 		null.EXTHSection.AddInt(t.EXTHThumbOffset, lastImageID)
