@@ -1,0 +1,7 @@
+# Experimentation
+/decompiled_*
+/_wip
+# Book formats
+/*.mobi
+/*.azw3
+/*.epub
