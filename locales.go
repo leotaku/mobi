@@ -108,8 +108,8 @@ var localeCodeMap = map[language.Tag]uint16{
 	language.Nepali:     97,
 }
 
-// A list of locales supported by MOBI, intended for use with Go
-// language matching facilities.
+// SupportedLocales is a list of locales supported by MOBI, intended
+// for use with Go language matching facilities.
 //
 // BUG: While the MOBI language format supports regions, this
 // implementation does not and explicitly removes region information
