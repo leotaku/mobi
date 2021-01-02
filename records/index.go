@@ -1,7 +1,6 @@
 package records
 
 import (
-	"bytes"
 	"fmt"
 
 	"github.com/leotaku/mobi/pdb"
@@ -63,8 +62,7 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 		cncxEntries = append(cncxEntries, cncx)
 
 		label := encodeINDXString(fmt.Sprintf("%03v", chap.Start))
-		buf := bytes.NewBuffer(nil)
-		writeSequential(buf, pdb.Endian,
+		bs := bytesSequential(pdb.Endian,
 			label,
 			calculateControlByte(t.TAGXTableChunk),
 			encodeVwi(chap.Start),  // Record offset
@@ -72,7 +70,7 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 			encodeVwi(cncxOffset),  // Label offset relative to CNXC record
 			encodeVwi(0),           // Null
 		)
-		idxtEntries = append(idxtEntries, buf.Bytes())
+		idxtEntries = append(idxtEntries, bs)
 		cncxOffset += len(cncx)
 	}
 
@@ -89,10 +87,8 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 func SkeletonIndexRecord(info []ChunkInfo) IndexRecord {
 	entries := make([][]byte, 0)
 	for i, chunk := range info {
-		buf := bytes.NewBuffer(nil)
 		label := encodeINDXString(fmt.Sprintf("SKEL%010v", i))
-
-		writeSequential(buf, pdb.Endian,
+		bs := bytesSequential(pdb.Endian,
 			label,
 			calculateControlByte(t.TAGXTableSkeleton),
 			encodeVwi(1),
@@ -102,7 +98,7 @@ func SkeletonIndexRecord(info []ChunkInfo) IndexRecord {
 			encodeVwi(chunk.PreStart),
 			encodeVwi(chunk.PreLength),
 		)
-		entries = append(entries, buf.Bytes())
+		entries = append(entries, bs)
 	}
 
 	return IndexRecord{
@@ -123,8 +119,7 @@ func ChunkIndexRecord(info []ChunkInfo) (IndexRecord, CNCXRecord) {
 		cncxEntries = append(cncxEntries, cncx)
 
 		label := encodeINDXString(fmt.Sprintf("%010v", chunk.ContentStart))
-		buf := bytes.NewBuffer(nil)
-		writeSequential(buf, pdb.Endian,
+		bs := bytesSequential(pdb.Endian,
 			label,
 			calculateControlByte(t.TAGXTableChunk),
 			encodeVwi(cncxOffset),          // CNCX offset
@@ -133,7 +128,7 @@ func ChunkIndexRecord(info []ChunkInfo) (IndexRecord, CNCXRecord) {
 			encodeVwi(0),                   // Geometry start
 			encodeVwi(chunk.ContentLength), // Geometry length
 		)
-		idxtEntries = append(idxtEntries, buf.Bytes())
+		idxtEntries = append(idxtEntries, bs)
 		cncxOffset += len(cncx)
 	}
 

@@ -1,6 +1,7 @@
 package records
 
 import (
+	"bytes"
 	"encoding/binary"
 	"io"
 
@@ -82,4 +83,14 @@ func writeSequential(w io.Writer, bo binary.ByteOrder, vs ...interface{}) error 
 		}
 	}
 	return nil
+}
+
+func bytesSequential(bo binary.ByteOrder, vs ...interface{}) []byte {
+	buf := bytes.NewBuffer(nil)
+	err := writeSequential(buf, bo, vs...)
+	if err != nil {
+		panic(err)
+	}
+
+	return buf.Bytes()
 }
