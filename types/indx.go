@@ -4,9 +4,9 @@ import "math"
 
 const (
 	CBNCXSingle byte = 15  // 0x0F
-	CBNCXParent      = 111 // 0x6F
-	CBNCXChild       = 31  // 0x1F
-	CBSkeleton       = 10  // 0x0A
+	CBNCXParent byte = 111 // 0x6F
+	CBNCXChild  byte = 31  // 0x1F
+	CBSkeleton  byte = 10  // 0x0A
 )
 
 const INDXHeaderLength = 192 // 0xC0
@@ -96,22 +96,22 @@ type TAGXTag uint32
 
 const (
 	TAGXTagEntryPosition       TAGXTag = 0x01010100
-	TAGXTagEntryLength                 = 0x02010200
-	TAGXTagEntryNameOffset             = 0x03010400
-	TAGXTagEntryDepthLevel             = 0x04010800
-	TAGXTagEntryParent                 = 0x15011000
-	TAGXTagEntryChild1                 = 0x16012000
-	TAGXTagEntryChildN                 = 0x17014000
-	TAGXTagEntryPosFid                 = 0x06028000
-	TAGXTagSkeletonChunkCount          = 0x01010300
-	TAGXTagSkeletonGeometry            = 0x06020C00
-	TAGXTagChunkCNCXOffset             = 0x02010100
-	TAGXTagChunkFileNumber             = 0x03010200
-	TAGXTagChunkSequenceNumber         = 0x04010400
-	TAGXTagChunkGeometry               = 0x06020800
-	TAGXTagGuideTitle                  = 0x01010100
-	TAGXTagGuidePosFid                 = 0x06020200
-	TAGXTagEnd                         = 0x00000001
+	TAGXTagEntryLength         TAGXTag = 0x02010200
+	TAGXTagEntryNameOffset     TAGXTag = 0x03010400
+	TAGXTagEntryDepthLevel     TAGXTag = 0x04010800
+	TAGXTagEntryParent         TAGXTag = 0x15011000
+	TAGXTagEntryChild1         TAGXTag = 0x16012000
+	TAGXTagEntryChildN         TAGXTag = 0x17014000
+	TAGXTagEntryPosFid         TAGXTag = 0x06028000
+	TAGXTagSkeletonChunkCount  TAGXTag = 0x01010300
+	TAGXTagSkeletonGeometry    TAGXTag = 0x06020C00
+	TAGXTagChunkCNCXOffset     TAGXTag = 0x02010100
+	TAGXTagChunkFileNumber     TAGXTag = 0x03010200
+	TAGXTagChunkSequenceNumber TAGXTag = 0x04010400
+	TAGXTagChunkGeometry       TAGXTag = 0x06020800
+	TAGXTagGuideTitle          TAGXTag = 0x01010100
+	TAGXTagGuidePosFid         TAGXTag = 0x06020200
+	TAGXTagEnd                 TAGXTag = 0x00000001
 )
 
 type TAGXTagTable []TAGXTag
