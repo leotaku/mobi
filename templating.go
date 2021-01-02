@@ -10,11 +10,11 @@ const defaultTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
   <head>
     <title>{{ .Mobi.Title }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    {{ range $i, $_ := .Mobi.CssFlows }}
+    {{ range $i, $_ := .Mobi.CSSFlows }}
     <link rel="stylesheet" type="text/css" href="kindle:flow:{{ $i | inc | printf "%03v" }}?mime=text/css"/>
     {{ end }}
   </head>
-  <body aid="{{ .Chunk.Id | printf "%04v" }}">
+  <body aid="{{ .Chunk.ID | printf "%04v" }}">
   </body>
 </html>`
 
@@ -30,27 +30,27 @@ type inventory struct {
 	Mobi    MobiBook
 	Chapter struct {
 		Title string
-		Id    int
+		ID    int
 	}
 	Chunk struct {
-		Id int
+		ID int
 	}
 }
 
-func newInventory(m MobiBook, c Chapter, chapId int, chunkId int) inventory {
+func newInventory(m MobiBook, c Chapter, chapID int, chunkID int) inventory {
 	return inventory{
 		Mobi: m,
 		Chapter: struct {
 			Title string
-			Id    int
+			ID    int
 		}{
 			Title: c.Title,
-			Id:    chapId,
+			ID:    chapID,
 		},
 		Chunk: struct {
-			Id int
+			ID int
 		}{
-			Id: chunkId,
+			ID: chunkID,
 		},
 	}
 }

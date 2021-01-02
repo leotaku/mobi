@@ -34,7 +34,7 @@ type MobiBook struct {
 	FixedLayout   bool
 	RightToLeft   bool
 	Chapters      []Chapter
-	CssFlows      []string
+	CSSFlows      []string
 	Images        []image.Image
 	CoverImage    image.Image
 	ThumbImage    image.Image
@@ -82,7 +82,7 @@ type Chunk struct {
 func (m MobiBook) Realize() pdb.Database {
 	db := pdb.NewDatabase(m.Title, m.CreatedDate)
 	html, chunks, chaps, err := chaptersToText(m)
-	text := html + strings.Join(m.CssFlows, "")
+	text := html + strings.Join(m.CSSFlows, "")
 	textRecords := textToRecords(text)
 
 	// Handle possible template errors
@@ -147,9 +147,9 @@ func (m MobiBook) Realize() pdb.Database {
 	}
 
 	// FDST Record
-	flows := append([]string{html}, m.CssFlows...)
+	flows := append([]string{html}, m.CSSFlows...)
 	db.AddRecord(r.NewFDSTRecord(flows...))
-	null.MOBIHeader.Unknown3OrFDSTEntryCount = uint32(len(m.CssFlows) + 1)
+	null.MOBIHeader.Unknown3OrFDSTEntryCount = uint32(len(m.CSSFlows) + 1)
 	null.MOBIHeader.FirstContentRecordNumberOrFDSTNumberMSB = 0
 	null.MOBIHeader.LastContentRecordNumberOrFDSTNumberLSB = uint16(db.Idx())
 
@@ -173,7 +173,7 @@ func (m MobiBook) Realize() pdb.Database {
 func (m MobiBook) createNullRecord() r.NullRecord {
 	// Variables
 	null := r.NewNullRecord(m.Title)
-	lastImageId := len(m.Images)
+	lastImageID := len(m.Images)
 	null.MOBIHeader.UniqueID = m.UniqueID
 	null.MOBIHeader.Locale = matchLocale(m.Language)
 
@@ -203,13 +203,13 @@ func (m MobiBook) createNullRecord() r.NullRecord {
 		null.EXTHSection.AddString(t.EXTHPageProgressionDirection, "rtl")
 	}
 	if m.CoverImage != nil {
-		null.EXTHSection.AddInt(t.EXTHCoverOffset, lastImageId)
+		null.EXTHSection.AddInt(t.EXTHCoverOffset, lastImageID)
 		null.EXTHSection.AddInt(t.EXTHHasFakeCover, 0)
-		null.EXTHSection.AddString(t.EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%04v", lastImageId+1))
-		lastImageId += 1
+		null.EXTHSection.AddString(t.EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%04v", lastImageID+1))
+		lastImageID += 1
 	}
 	if m.ThumbImage != nil {
-		null.EXTHSection.AddInt(t.EXTHThumbOffset, lastImageId)
+		null.EXTHSection.AddInt(t.EXTHThumbOffset, lastImageID)
 	}
 
 	return null
