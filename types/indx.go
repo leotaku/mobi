@@ -37,7 +37,7 @@ func NewINDXHeader(RecordCount uint32, EntryCount uint32) INDXHeader {
 		HeaderLength:     INDXHeaderLength,
 		HeaderType:       0,
 		IndexType:        0, // 0: normal, 2: inflection
-		IDXTStart:        232, // TODO 240
+		IDXTStart:        0,
 		IndexRecordCount: RecordCount,
 		IndexEncoding:    65001,
 		IndexLanguage:    math.MaxUint32,
@@ -45,7 +45,7 @@ func NewINDXHeader(RecordCount uint32, EntryCount uint32) INDXHeader {
 		ORDTStart:        0,
 		LIGTStart:        0,
 		LIGTCount:        0,
-		CNCXCount:        1, // TODO
+		CNCXCount:        0,
 		TAGXOffset:       INDXHeaderLength,
 	}
 }
