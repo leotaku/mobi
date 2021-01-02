@@ -23,10 +23,9 @@ func TestRecordHeaderLength(t *testing.T) {
 
 func TestNullRecordLength(t *testing.T) {
 	nr := records.NewNullRecord("Foo")
-	buf := bytes.NewBuffer(nil)
-	nr.Write(buf)
+	bs := writeRecord(nr)
 
-	assertEq(t, nr.Length(), len(buf.Bytes()))
+	assertEq(t, nr.Length(), len(bs))
 }
 
 func TestIndexSectionLength(t *testing.T) {
@@ -43,27 +42,24 @@ func TestNullRecordLengthWithEXTH(t *testing.T) {
 	nr := records.NewNullRecord("Foo")
 	nr.EXTHSection.AddString(types.EXTHTitle, "BookTitle")
 	nr.EXTHSection.AddInt(types.EXTHAdult, 0)
-	buf := bytes.NewBuffer(nil)
-	nr.Write(buf)
+	bs := writeRecord(nr)
 
-	assertEq(t, nr.Length(), len(buf.Bytes()))
+	assertEq(t, nr.Length(), len(bs))
 }
 
 func TestIndexHeaderRecordLength(t *testing.T) {
 	hr := records.SkeletonHeaderIndexRecord(0)
-	buf := bytes.NewBuffer(nil)
-	hr.Write(buf)
+	bs := writeRecord(hr)
 
-	assertEq(t, hr.Length(), len(buf.Bytes()))
+	assertEq(t, hr.Length(), len(bs))
 	assertEq(t, hr.Length()%4, 0)
 }
 
 func TestSkeletonHeaderRecordLength(t *testing.T) {
 	sr := records.SkeletonIndexRecord(nil)
-	buf := bytes.NewBuffer(nil)
-	sr.Write(buf)
+	bs := writeRecord(sr)
 
-	assertEq(t, sr.Length(), len(buf.Bytes()))
+	assertEq(t, sr.Length(), len(bs))
 	assertEq(t, sr.Length()%4, 0)
 }
 
@@ -75,10 +71,9 @@ func TestSkeletonHeaderRecordLengthWithChapter(t *testing.T) {
 		ContentLength: 100,
 	}
 	sr := records.SkeletonIndexRecord([]records.ChunkInfo{chunk})
-	buf := bytes.NewBuffer(nil)
-	sr.Write(buf)
+	bs := writeRecord(sr)
 
-	assertEq(t, sr.Length(), len(buf.Bytes()))
+	assertEq(t, sr.Length(), len(bs))
 	assertEq(t, sr.Length()%4, 0)
 }
 
@@ -90,10 +85,9 @@ func TestSkeletonHeaderRecordLengthWithChapters(t *testing.T) {
 		ContentLength: 100,
 	}
 	sr := records.SkeletonIndexRecord([]records.ChunkInfo{chunk, chunk, chunk})
-	buf := bytes.NewBuffer(nil)
-	sr.Write(buf)
+	bs := writeRecord(sr)
 
-	assertEq(t, sr.Length(), len(buf.Bytes()))
+	assertEq(t, sr.Length(), len(bs))
 	assertEq(t, sr.Length()%4, 0)
 }
 
@@ -105,7 +99,10 @@ func TestReadWrite(t *testing.T) {
 	db.AddRecord(pdb.RawRecord{'h', 'i'})
 	db.AddRecord(pdb.RawRecord{'c', 'a', 't'})
 	db.AddRecord(pdb.RawRecord{'t', 'r', 'e', 'e'})
-	db.Write(w)
+	err := db.Write(w)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	// Read
 	r := bytes.NewReader(w.Bytes())
@@ -125,9 +122,22 @@ func assertEq(t *testing.T, v1 interface{}, v2 interface{}) {
 	}
 }
 
+func writeRecord(r pdb.Record) []byte {
+	buf := bytes.NewBuffer(nil)
+	err := r.Write(buf)
+	if err != nil {
+		panic(err)
+	}
+
+	return buf.Bytes()
+}
+
 func measure(v interface{}) int {
 	buf := bytes.NewBuffer(nil)
-	binary.Write(buf, pdb.Endian, v)
+	err := binary.Write(buf, pdb.Endian, v)
+	if err != nil {
+		panic(err)
+	}
 
 	return len(buf.Bytes())
 }
