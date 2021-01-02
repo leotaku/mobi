@@ -1,6 +1,7 @@
 package mobi
 
 import (
+	"encoding/hex"
 	"fmt"
 	"image"
 	"strings"
@@ -152,7 +153,7 @@ func (m MobiBook) createNullRecord() r.NullRecord {
 	null.EXTHSection.AddString(t.EXTHAuthor, m.Author)
 	null.EXTHSection.AddString(t.EXTHPublisher, m.Publisher)
 	null.EXTHSection.AddString(t.EXTHSubject, m.Subject)
-	null.EXTHSection.AddString(t.EXTHASIN, encodeID(m.UniqueID))
+	null.EXTHSection.AddString(t.EXTHASIN, encodeASIN(m.UniqueID))
 	null.EXTHSection.AddString(t.EXTHLanguage, langString)
 	if m.PublishedDate != (time.Time{}) {
 		dateString := m.PublishedDate.Format("2006-01-02T15:04:05.000000+07:00")
@@ -183,10 +184,8 @@ func (m MobiBook) createNullRecord() r.NullRecord {
 	return null
 }
 
-func encodeID(id uint32) string {
-	// b := make([]byte, 4)
-	// pdb.Endian.PutUint32(b, id)
-	// return base32.HexEncoding.EncodeToString(b)
-
-	return fmt.Sprintf("%020v", id)
+func encodeASIN(id uint32) string {
+	b := make([]byte, 4)
+	pdb.Endian.PutUint32(b, id)
+	return hex.EncodeToString(b)
 }
