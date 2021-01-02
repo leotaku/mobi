@@ -113,7 +113,7 @@ var localeCodeMap = map[language.Tag]uint16{
 // SupportedLocales is a list of locales supported by MOBI, intended
 // for use with Go language matching facilities.
 //
-// BUG: While the MOBI language format supports regions, this
+// BUG(leotaku): While the MOBI language format supports regions, this
 // implementation does not and explicitly removes region information
 // from the locale stored in the generated MOBI file.
 var SupportedLocales []language.Tag
