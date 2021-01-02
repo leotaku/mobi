@@ -190,13 +190,3 @@ func encodeID(id uint32) string {
 
 	return fmt.Sprintf("%020v", id)
 }
-
-func watermark(null *r.NullRecord) {
-	null.EXTHSection.AddString(t.EXTHContributor, "go-mobi [https://github.com/leotaku/go-mobi]")
-	null.EXTHSection.AddString(t.EXTHSource, "go-mobi:00000000-0000-0000-0000-000000000000")
-	null.EXTHSection.AddInt(t.EXTHCreatorSoftware, 202)
-	null.EXTHSection.AddInt(t.EXTHCreatorMajor, 0)
-	null.EXTHSection.AddInt(t.EXTHCreatorMinor, 0)
-	null.EXTHSection.AddInt(t.EXTHCreatorBuild, 0)
-	null.EXTHSection.AddString(t.EXTHCreatorBuildRev, "0000-0000000")
-}
