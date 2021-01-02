@@ -59,11 +59,12 @@ func calculateControlByte(tagx t.TAGXTagTable) byte {
 var bitmaskToShiftMap = map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 2, 8: 3, 12: 2, 16: 4, 32: 5, 48: 4, 64: 6, 128: 7, 192: 6}
 
 func mapTagToNvals(tag t.TAGXTag) byte {
-	if tag == t.TAGXTagSkeletonGeometry {
+	switch tag {
+	case t.TAGXTagSkeletonGeometry:
 		return 4
-	} else if tag == t.TAGXTagChunkGeometry || tag == t.TAGXTagSkeletonChunkCount {
+	case t.TAGXTagChunkGeometry, t.TAGXTagSkeletonChunkCount:
 		return 2
-	} else {
+	default:
 		return 1
 	}
 }
