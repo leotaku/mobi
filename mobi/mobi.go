@@ -29,6 +29,13 @@ type MobiBook struct {
 	CoverImage    image.Image
 	ThumbImage    image.Image
 	UniqueID      uint32
+
+	// hidden
+	tpl *template.Template
+}
+func (m *MobiBook) OverrideTemplate(tpl template.Template) MobiBook {
+	m.tpl = &tpl
+	return *m
 }
 type Chapter struct {
 	Title  string
@@ -36,7 +43,6 @@ type Chapter struct {
 }
 
 type Chunk struct {
-	Head string
 	Body string
 }
 
