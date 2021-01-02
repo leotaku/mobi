@@ -62,7 +62,6 @@ func (r IndexRecord) Write(w io.Writer) error {
 		if err != nil {
 			return err
 		}
-
 	}
 
 	// Write entries
