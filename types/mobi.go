@@ -16,12 +16,12 @@ type PalmDocHeader struct {
 
 func NewPalmDocHeader() PalmDocHeader {
 	return PalmDocHeader{
-		Compression:     1, // TODO
+		Compression:     1,
 		Unused1:         0,
 		TextLength:      0,
 		TextRecordCount: 0,
 		RecordSize:      0x1000,
-		Encryption:      0, // TODO
+		Encryption:      0,
 		Unknown1:        0,
 	}
 }
@@ -106,11 +106,11 @@ func NewMOBIHeader() MOBIHeader {
 		OutputLanguage:                          0,
 		MinVersion:                              6,
 		FirstImageIndex:                         math.MaxUint32,
-		HuffmanRecordOffset:                     0, // TODO
+		HuffmanRecordOffset:                     0,
 		HuffmanRecordCount:                      0,
 		HuffmanTableOffset:                      0,
 		HuffmanTableLength:                      0,
-		EXTHFlags:                               0b1010000, // TODO
+		EXTHFlags:                               0b1010000, // Used by Calibre
 		Unknown1:                                [32]byte{},
 		DRMOffset:                               math.MaxUint32,
 		DRMCount:                                math.MaxUint32,
@@ -129,7 +129,7 @@ func NewMOBIHeader() MOBIHeader {
 		FirstCompilationSectionCount:            0,
 		CompilationSectionCount:                 math.MaxUint32,
 		Unknown6:                                math.MaxUint32,
-		ExtraRecordDataFlags:                    0b01, // Should be '0b11' with TBS
+		ExtraRecordDataFlags:                    0b01, // Should be '0b11' with indexing
 		INDXRecordOffset:                        math.MaxUint32,
 	}
 }

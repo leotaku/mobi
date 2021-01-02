@@ -36,7 +36,7 @@ func NewINDXHeader(RecordCount uint32, EntryCount uint32) INDXHeader {
 		INDX:             [4]byte{'I', 'N', 'D', 'X'},
 		HeaderLength:     INDXHeaderLength,
 		HeaderType:       0,
-		IndexType:        0,   // TODO: normal, inflection
+		IndexType:        0, // 0: normal, 2: inflection
 		IDXTStart:        232, // TODO 240
 		IndexRecordCount: RecordCount,
 		IndexEncoding:    65001,

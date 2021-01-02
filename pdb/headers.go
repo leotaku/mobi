@@ -49,6 +49,6 @@ const RecordHeaderLength = 8 // 0x08
 type RecordHeader struct {
 	Offset    uint32
 	Attribute byte
-	Skip      byte // TODO
+	Skip      byte
 	UniqueID  uint16
 }
