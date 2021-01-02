@@ -51,7 +51,7 @@ func (m MobiBook) Realize() pdb.Database {
 	db := pdb.NewDatabase(m.Title, m.CreatedDate)
 	html, chunks, chaps, err := chaptersToText(m)
 	text := html + strings.Join(m.CssFlows, "")
-	textRecords := genTextRecords(text)
+	textRecords := textToRecords(text)
 
 	// Handle possible template errors
 	if err != nil {

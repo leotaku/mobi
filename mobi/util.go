@@ -39,13 +39,7 @@ func chaptersToText(m MobiBook) (string, []r.ChunkInfo, []r.ChapterInfo, error) 
 	return text, chunks, chaps, nil
 }
 
-func genTextRecords(html string) []pdb.Record {
-	min := func(a, b int) int {
-		if a < b {
-			return a
-		}
-		return b
-	}
+func textToRecords(html string) []pdb.Record {
 	records := []pdb.Record{}
 	recordCount := len(html) / r.TextRecordMaxSize
 	if len(html)%r.TextRecordMaxSize != 0 {
@@ -61,4 +55,11 @@ func genTextRecords(html string) []pdb.Record {
 	}
 
 	return records
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
