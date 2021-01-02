@@ -32,7 +32,7 @@ func reverseBytes(buf []byte) {
 	}
 }
 
-func invMod(dividend int, divisor int) int {
+func invMod(dividend, divisor int) int {
 	return (divisor/2 + dividend) % divisor
 }
 
