@@ -101,7 +101,7 @@ func NewMOBIHeader() MOBIHeader {
 		FirstNonBookIndex:                       0,
 		FullNameOffset:                          0,
 		FullNameLength:                          0,
-		Locale:                                  9, // ENGLISH-NEUTRAL
+		Locale:                                  0, // NEUTRAL-NEUTRAL
 		InputLanguage:                           0,
 		OutputLanguage:                          0,
 		MinVersion:                              6,
