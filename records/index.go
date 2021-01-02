@@ -66,7 +66,7 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 			label,
 			calculateControlByte(t.TAGXTableChunk),
 			encodeVwi(chap.Start),  // Record offset
-			encodeVwi(chap.Length), // Lenght of a record
+			encodeVwi(chap.Length), // Length of a record
 			encodeVwi(cncxOffset),  // Label offset relative to CNXC record
 			encodeVwi(0),           // Null
 		)
