@@ -100,7 +100,7 @@ func TestSkeletonHeaderRecordLengthWithChapters(t *testing.T) {
 func TestReadWrite(t *testing.T) {
 	// Write
 	w := bytes.NewBuffer(nil)
-	db := pdb.NewDatabase("Test_Book", time.Unix(0, 0))
+	db := pdb.NewDatabase("Test Book", time.Unix(0, 0))
 	db.AddRecord(pdb.RawRecord{'o'})
 	db.AddRecord(pdb.RawRecord{'h', 'i'})
 	db.AddRecord(pdb.RawRecord{'c', 'a', 't'})
