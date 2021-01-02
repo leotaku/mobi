@@ -88,7 +88,6 @@ func NewEXTHEntryHeader(RecordType EXTHEntryType, RecordLength uint32) EXTHEntry
 		RecordType:   RecordType,
 		RecordLength: RecordLength,
 	}
-
 }
 
 const EXTHHeaderLength = 12 // 0x0C
