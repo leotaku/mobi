@@ -1,3 +1,4 @@
+// Package pdb implements reading and writing PalmDB databases.
 package pdb
 
 import (
