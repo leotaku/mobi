@@ -101,10 +101,16 @@ func ReadDatabase(r io.Reader) (*Database, error) {
 	}
 
 	palmDBHeader := PalmDBHeader{}
-	binary.Read(b, Endian, &palmDBHeader)
+	err = binary.Read(b, Endian, &palmDBHeader)
+	if err != nil {
+		return nil, err
+	}
 
 	offsets := make([]RecordHeader, palmDBHeader.NumRecords)
-	binary.Read(b, Endian, &offsets)
+	err = binary.Read(b, Endian, &offsets)
+	if err != nil {
+		return nil, err
+	}
 
 	records := make([]Record, 0)
 	for i := 1; i < len(offsets); i++ {
