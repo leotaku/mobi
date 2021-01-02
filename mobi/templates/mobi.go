@@ -55,8 +55,8 @@ type MOBIHeader struct {
 	FirstImageIndex                         uint32
 	HuffmanRecordOffset                     uint32
 	HuffmanRecordCount                      uint32
-	HuffmanTableOffset                      uint32 // DATP
-	HuffmanTableLength                      uint32 // DATP
+	HuffmanTableOffset                      uint32
+	HuffmanTableLength                      uint32
 	EXTHFlags                               uint32
 	Unknown1                                [32]byte
 	DRMOffset                               uint32
