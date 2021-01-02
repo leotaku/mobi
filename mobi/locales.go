@@ -114,7 +114,6 @@ var localeCodeMap = map[language.Tag]uint16{
 // BUG: While the MOBI language format supports regions, this
 // implementation does not and explicitly removes region information
 // from the locale stored in the generated MOBI file.
-
 var SupportedLocales []language.Tag
 
 func init() {

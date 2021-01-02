@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Endian of values encoded in Palm databases.
+// Endianness of values encoded in Palm databases.
 var Endian = binary.BigEndian
 
 // Database represents an in-memory Palm database.

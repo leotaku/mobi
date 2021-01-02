@@ -44,7 +44,7 @@ func NewPalmDBHeader(name string, dateTime time.Time, numRecords uint16, lastRec
 	}
 }
 
-const RecordHeaderLength = 8
+const RecordHeaderLength = 8 // 0x08
 
 type RecordHeader struct {
 	Offset    uint32
