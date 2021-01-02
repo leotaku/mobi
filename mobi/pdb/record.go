@@ -19,11 +19,3 @@ func (r RawRecord) Write(w io.Writer) error {
 func (r RawRecord) Length() int {
 	return len(r)
 }
-
-type Info struct {
-	mapping map[string]int
-}
-
-func (i *Info) Set(s string, v int) {
-	i.mapping[s] = int(v)
-}
