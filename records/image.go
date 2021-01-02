@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"image"
 	"image/jpeg"
-	"image/png"
 	"io"
 )
 
@@ -38,15 +37,6 @@ func (r ImageRecord) Write(w io.Writer) error {
 func (r *ImageRecord) maybeEncodeJPG() {
 	if r.img != nil {
 		r.encoded, r.error = encodeJFIF(*r.img, nil)
-		r.img = nil
-	}
-}
-
-func (r *ImageRecord) maybeEncodePNG() {
-	if r.img != nil {
-		buf := bytes.NewBuffer(nil)
-		r.error = png.Encode(buf, *r.img)
-		r.encoded = buf.Bytes()
 		r.img = nil
 	}
 }
