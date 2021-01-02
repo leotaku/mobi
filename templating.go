@@ -62,5 +62,5 @@ func runTemplate(tpl template.Template, v interface{}) (string, error) {
 		return "", err
 	}
 
-	return string(buf.Bytes()), nil
+	return buf.String(), nil
 }
