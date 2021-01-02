@@ -52,15 +52,8 @@ const (
 	EXTHClippingLimit3XX                       = 301
 	EXTHClippingLimit                          = 401
 	EXTHPublisherLimit                         = 402
-	EXTHUnknown403                             = 403
 	EXTHTtsDisable                             = 404
-	EXTHUnknown405                             = 405
 	EXTHRental                                 = 406
-	EXTHUnknown407                             = 407
-	EXTHUnknown450                             = 450
-	EXTHUnknown451                             = 451
-	EXTHUnknown452                             = 452
-	EXTHUnknown453                             = 453
 	EXTHDocType                                = 501
 	EXTHLastUpdate                             = 502
 	EXTHUpdatedTitle                           = 503
