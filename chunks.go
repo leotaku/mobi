@@ -1,6 +1,6 @@
 package mobi
 
-func SingleChunk(ss ...string) []Chunk {
+func SingleChunks(ss ...string) []Chunk {
 	result := make([]Chunk, 0)
 	for _, s := range ss {
 		result = append(result, Chunk{

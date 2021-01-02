@@ -72,8 +72,8 @@ type Chapter struct {
 //
 // Chunks are mostly an implementation detail that is exposed for
 // maximum control over the final book output.  Generally, you should
-// use one of the various 'Chunks'-prefixed functions in order to
-// generate the correct amount of chunks for a chapter.
+// use one of the various "Chunks" functions in order to generate the
+// correct amount of chunks for a chapter.
 type Chunk struct {
 	Body string
 }
