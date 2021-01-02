@@ -155,9 +155,9 @@ func NewKF8Header() KF8Header {
 	mh.Unknown3OrFDSTEntryCount = 0
 	return KF8Header{
 		MOBIHeader:        mh,
-		ChunkIndex:        0,
-		SkeletonIndex:     0,
-		HuffmanTableIndex: 0,
-		GuideIndex:        0,
+		ChunkIndex:        math.MaxUint32,
+		SkeletonIndex:     math.MaxUint32,
+		HuffmanTableIndex: math.MaxUint32,
+		GuideIndex:        math.MaxUint32,
 	}
 }
