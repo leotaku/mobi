@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"io"
 	"io/ioutil"
+	"time"
 )
 
 // Endian of values encoded in Palm databases.
@@ -13,13 +14,15 @@ var Endian = binary.BigEndian
 // Database represents an in-memory Palm database.
 type Database struct {
 	Name    string
+	Date    time.Time
 	Records []Record
 }
 
 // NewDatabase creates an empty Palm database with name.
-func NewDatabase(name string) Database {
+func NewDatabase(name string, date time.Time) Database {
 	return Database{
 		Name:    trimZeroes(name),
+		Date:    date,
 		Records: []Record{},
 	}
 }
@@ -33,7 +36,7 @@ func (d *Database) AddRecord(r Record) {
 func (d Database) Write(w io.Writer) error {
 	name := underscoreSpaces(d.Name)
 	rlen := len(d.Records)
-	palmDBHeader := NewPalmDBHeader(name, uint16(rlen), uint32(rlen)*2-1)
+	palmDBHeader := NewPalmDBHeader(name, d.Date, uint16(rlen), uint32(rlen)*2-1)
 	err := binary.Write(w, Endian, palmDBHeader)
 	if err != nil {
 		return err

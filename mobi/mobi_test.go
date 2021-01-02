@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"testing"
+	"time"
 
 	"github.com/leotaku/manki/mobi/pdb"
 	"github.com/leotaku/manki/mobi/records"
@@ -99,7 +100,7 @@ func TestSkeletonHeaderRecordLengthWithChapters(t *testing.T) {
 func TestReadWrite(t *testing.T) {
 	// Write
 	w := bytes.NewBuffer(nil)
-	db := pdb.NewDatabase("Test_Book")
+	db := pdb.NewDatabase("Test_Book", time.Unix(0, 0))
 	db.AddRecord(pdb.RawRecord{'o'})
 	db.AddRecord(pdb.RawRecord{'h', 'i'})
 	db.AddRecord(pdb.RawRecord{'c', 'a', 't'})

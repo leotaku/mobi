@@ -21,18 +21,18 @@ type PalmDBHeader struct {
 	NumRecords         uint16
 }
 
-func NewPalmDBHeader(name string, numRecords uint16, lastRecordUID uint32) PalmDBHeader {
-	time := uint32(time.Now().Unix())
+func NewPalmDBHeader(name string, dateTime time.Time, numRecords uint16, lastRecordUID uint32) PalmDBHeader {
 	nameBytes := [32]byte{}
 	copy(nameBytes[:31], name)
+	palmTime := calculatePalmTime(dateTime)
 
 	return PalmDBHeader{
 		Name:               nameBytes,
 		FileAttributes:     0,
 		Version:            0,
-		CreationTime:       time,
-		ModificationTime:   time,
-		BackupTime:         time,
+		CreationTime:       palmTime,
+		ModificationTime:   palmTime,
+		BackupTime:         palmTime,
 		ModificationNumber: 0,
 		AppInfo:            0,
 		SortInfo:           0,
