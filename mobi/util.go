@@ -56,7 +56,7 @@ func genTextRecords(html string) []pdb.Record {
 		from := i * r.TextRecordMaxSize
 		to := from + r.TextRecordMaxSize
 
-		record := r.NewTBSTextRecord(html[from:min(to, len(html))])
+		record := r.NewTextRecord(html[from:min(to, len(html))])
 		records = append(records, record)
 	}
 
