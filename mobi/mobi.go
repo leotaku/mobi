@@ -1,3 +1,4 @@
+// Package mobi implements writing KF8-style formatted MOBI and AZW3 books.
 package mobi
 
 import (
@@ -14,6 +15,13 @@ import (
 	"golang.org/x/text/language"
 )
 
+// MobiBook represents all the information necessary to generate a
+// KF8-style formatted MOBI or AZW3 book.
+//
+// You are expected to initialize MobiBook using the required
+// variables and/or builder pattern, then convert the resulting
+// structure into a PalmDB database.  This database can then be
+// written out to any io.Writer.
 type MobiBook struct {
 	Title         string
 	Author        string
@@ -35,19 +43,42 @@ type MobiBook struct {
 	// hidden
 	tpl *template.Template
 }
+
+// OverrideTemplate overrides the template used in order to generate
+// the skeleton section of a KF8 HTML chunk.
+//
+// During conversion to a PalmDB database, this template is passed the
+// internal inventory type.  If the template cannot successfully be
+// applied, the conversion will panic.
+//
+// The skeleton section generally consists of a complete HTML document
+// including head and body, with the body tag expected to contain an
+// 'aid' attribute that indicates the identifier of the corresponding
+// chunk.  As it is relatively easy to end up with an invalid KF8
+// document by generating invalid skeleton sections, this option is
+// private and hidden behind a setter function.
 func (m *MobiBook) OverrideTemplate(tpl template.Template) MobiBook {
 	m.tpl = &tpl
 	return *m
 }
+
+// Chapter represents a chapter in a MobiBook book.
 type Chapter struct {
 	Title  string
 	Chunks []Chunk
 }
 
+// Chunk represents a chunk of text in a MobiBook Chapter.
+//
+// Chunks are mostly an implementation detail that is exposed for
+// maximum control over the final book output.  Generally, you should
+// use one of the various 'Chunks'-prefixed functions in order to
+// generate the correct amount of chunks for a chapter.
 type Chunk struct {
 	Body string
 }
 
+// Realize converts a MobiBook to a PalmDB Database.
 func (m MobiBook) Realize() pdb.Database {
 	db := pdb.NewDatabase(m.Title, m.CreatedDate)
 	html, chunks, chaps, err := chaptersToText(m)
