@@ -2,7 +2,7 @@ package mobi
 
 import (
 	"bytes"
-	"html/template"
+	"text/template"
 )
 
 const defaultTemplateString = `<?xml version="1.0" encoding="UTF-8"?>

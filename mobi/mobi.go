@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/leotaku/manki/mobi/pdb"
