@@ -1,8 +1,8 @@
 package mobi
 
 import (
-	"github.com/leotaku/manki/mobi/pdb"
-	r "github.com/leotaku/manki/mobi/records"
+	"github.com/leotaku/mobi/pdb"
+	r "github.com/leotaku/mobi/records"
 )
 
 func chaptersToText(m MobiBook) (string, []r.ChunkInfo, []r.ChapterInfo, error) {

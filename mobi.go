@@ -9,9 +9,9 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/leotaku/manki/mobi/pdb"
-	r "github.com/leotaku/manki/mobi/records"
-	t "github.com/leotaku/manki/mobi/types"
+	"github.com/leotaku/mobi/pdb"
+	r "github.com/leotaku/mobi/records"
+	t "github.com/leotaku/mobi/types"
 	"golang.org/x/text/language"
 )
 

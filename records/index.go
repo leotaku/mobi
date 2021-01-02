@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/leotaku/manki/mobi/pdb"
-	t "github.com/leotaku/manki/mobi/types"
+	"github.com/leotaku/mobi/pdb"
+	t "github.com/leotaku/mobi/types"
 )
 
 func NCXHeaderIndexRecord(entryCount int) IndexRecord {

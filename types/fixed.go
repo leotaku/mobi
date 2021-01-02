@@ -5,7 +5,7 @@ import (
 	"io"
 	"math"
 
-	"github.com/leotaku/manki/mobi/pdb"
+	"github.com/leotaku/mobi/pdb"
 )
 
 const FLISRecordLength = 36

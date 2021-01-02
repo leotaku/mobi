@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"io"
 
-	"github.com/leotaku/manki/mobi/pdb"
-	t "github.com/leotaku/manki/mobi/types"
+	"github.com/leotaku/mobi/pdb"
+	t "github.com/leotaku/mobi/types"
 )
 
 const NullPaddingLength = 8192 // 0x2000

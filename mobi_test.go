@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/leotaku/manki/mobi/pdb"
-	"github.com/leotaku/manki/mobi/records"
-	"github.com/leotaku/manki/mobi/types"
+	"github.com/leotaku/mobi/pdb"
+	"github.com/leotaku/mobi/records"
+	"github.com/leotaku/mobi/types"
 )
 
 func TestPDBHeaderLength(t *testing.T) {
