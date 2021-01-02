@@ -1,134 +1,195 @@
 package mobi
 
 import (
+	"fmt"
 	"image"
-	"math"
 	"strings"
+	"time"
 
 	"github.com/leotaku/manki/mobi/pdb"
 	r "github.com/leotaku/manki/mobi/records"
 	t "github.com/leotaku/manki/mobi/templates"
+	"golang.org/x/text/language"
 )
 
 type MobiBook struct {
-	Title      string
-	Author     string
-	Chapters   []Chapter
-	ExtraFlows []string
-	Images     []image.Image
-	CoverImage int
-	UniqueID   uint32
-
-	text        string
-	textRecords []pdb.Record
+	Title         string
+	Author        string
+	Publisher     string
+	Subject       string
+	CreatedDate   time.Time
+	PublishedDate time.Time
+	DocType       string
+	Language      language.Tag
+	FixedLayout   bool
+	RightToLeft   bool
+	Chapters      []Chapter
+	CssFlows      []string
+	Images        []image.Image
+	CoverImage    image.Image
+	ThumbImage    image.Image
+	UniqueID      uint32
+}
+type Chapter struct {
+	Title  string
+	Chunks []Chunk
 }
 
-type Chapter struct {
-	Name        string
-	TextContent string
+type Chunk struct {
+	Head string
+	Body string
 }
 
 func (m MobiBook) Realize() pdb.Database {
-	db := pdb.NewDatabase(m.Title)
-	html, info := chaptersToText(m.Chapters)
-	m.text = html + strings.Join(m.ExtraFlows, "")
-	m.textRecords = genTextRecords(m.text)
+	db := pdb.NewDatabase(m.Title, m.CreatedDate)
+	html, chunks, chaps, err := chaptersToText(m)
+	text := html + strings.Join(m.CssFlows, "")
+	textRecords := genTextRecords(text)
+
+	// Handle possible template errors
+	if err != nil {
+		panic(err)
+	}
 
 	// Null record
 	null := m.createNullRecord()
 	db.AddRecord(null)
 
 	// Text records
-	for _, rec := range m.textRecords {
+	null.PalmDocHeader.TextRecordCount = uint16(len(textRecords))
+	null.PalmDocHeader.TextLength = uint32(len(text))
+	for _, rec := range textRecords {
 		db.AddRecord(rec)
 	}
 
+	// Padding
+	lastLength := textRecords[len(textRecords)-1].Length()
+	if lastLength%4 != 0 {
+		pad := make(pdb.RawRecord, lastLength%4)
+		db.AddRecord(pad)
+	}
+	null.MOBIHeader.FirstNonBookIndex = uint32(db.Idx() + 1)
+
 	// Chunk record
-	chunk, cncx := r.ChunkIndexRecord(info)
-	ch := r.ChunkHeaderIndexRecord(len(m.text), len(m.Chapters))
-	db.AddRecord(ch)
+	chunk, cncx := r.ChunkIndexRecord(chunks)
+	ch := r.ChunkHeaderIndexRecord(len(text), len(m.Chapters))
+	null.MOBIHeader.ChunkIndex = uint32(db.AddRecord(ch))
 	db.AddRecord(chunk)
 	db.AddRecord(cncx)
 
 	// Skeleton record
-	skeleton := r.SkeletonIndexRecord(info)
+	skeleton := r.SkeletonIndexRecord(chunks)
 	sh := r.SkeletonHeaderIndexRecord(len(skeleton.IDXTEntries))
-	db.AddRecord(sh)
+	null.MOBIHeader.SkeletonIndex = uint32(db.AddRecord(sh))
 	db.AddRecord(skeleton)
 
+	// NCX record
+	ncx, cncx := r.NCXIndexRecord(chaps)
+	nh := r.NCXHeaderIndexRecord(len(skeleton.IDXTEntries))
+	null.MOBIHeader.INDXRecordOffset = uint32(db.AddRecord(nh))
+	db.AddRecord(ncx)
+	db.AddRecord(cncx)
+
 	// Image records
-	for _, img := range m.Images {
+	images := m.Images
+	if m.CoverImage != nil {
+		images = append(images, m.CoverImage)
+	}
+	if m.ThumbImage != nil {
+		images = append(images, m.ThumbImage)
+	}
+	if len(images) > 0 {
+		null.MOBIHeader.FirstImageIndex = uint32(db.Idx() + 1)
+		null.EXTHSection.AddInt(t.EXTHKF8CountResources, len(images))
+	}
+	for _, img := range images {
 		rec := r.NewImageRecord(img)
 		db.AddRecord(rec)
 	}
 
-	// Trailing records
-	flows := append([]string{html}, m.ExtraFlows...)
+	// FDST Record
+	flows := append([]string{html}, m.CssFlows...)
 	db.AddRecord(r.NewFDSTRecord(flows...))
+	null.MOBIHeader.Unknown3OrFDSTEntryCount = uint32(len(m.CssFlows) + 1)
+	null.MOBIHeader.FirstContentRecordNumberOrFDSTNumberMSB = 0
+	null.MOBIHeader.LastContentRecordNumberOrFDSTNumberLSB = uint16(db.Idx())
+
+	// FLIS Record
 	db.AddRecord(t.NewFLISRecord())
-	db.AddRecord(t.NewFCISRecord(uint32(len(m.text))))
+	null.MOBIHeader.FLISRecordCount = 1
+	null.MOBIHeader.FLISRecordNumber = uint32(db.Idx())
+
+	// FCIS Record
+	db.AddRecord(t.NewFCISRecord(uint32(len(text))))
+	null.MOBIHeader.FCISRecordCount = 1
+	null.MOBIHeader.FCISRecordNumber = uint32(db.Idx())
+
+	// Replace updated Null record
 	db.AddRecord(t.EOFRecord)
+	db.ReplaceRecord(0, null)
 
 	return db
 }
 
-func (m *MobiBook) createNullRecord() r.NullRecord {
+func (m MobiBook) createNullRecord() r.NullRecord {
 	// Variables
 	null := r.NewNullRecord(m.Title)
-	ltr := len(m.textRecords)  // Last text record
-	lir := ltr + 5             // Last index record
-	lcr := lir + len(m.Images) // Last contentful record
-
-	// PalmDoc header
-	null.PalmDocHeader.TextLength = uint32(len(m.text))
-	null.PalmDocHeader.TextRecordCount = uint16(ltr - 1) // TODO
-
-	// MOBI header
-	if len(m.Images) > 0 {
-		null.MOBIHeader.FirstImageIndex = uint32(lir + 1)
-	} else {
-		null.MOBIHeader.FirstImageIndex = math.MaxUint32
-	}
-	null.MOBIHeader.FirstNonBookIndex = uint32(ltr + 1)
-	null.MOBIHeader.FLISRecordCount = 1
-	null.MOBIHeader.FLISRecordNumber = uint32(lcr + 2)
-	null.MOBIHeader.FCISRecordCount = 1
-	null.MOBIHeader.FCISRecordNumber = uint32(lcr + 3)
+	lastImageId := len(m.Images)
 	null.MOBIHeader.UniqueID = m.UniqueID
-
-	// KF8
-	null.MOBIHeader.FirstContentRecordNumberOrFDSTNumberMSB = 0
-	null.MOBIHeader.LastContentRecordNumberOrFDSTNumberLSB = uint16(lcr + 1)
-	null.MOBIHeader.Unknown3OrFDSTEntryCount = uint32(len(m.ExtraFlows) + 1)
-	null.MOBIHeader.HuffmanTableIndex = math.MaxUint32
-
-	// Indexes
-	null.MOBIHeader.INDXRecordOffset = math.MaxUint32
-	null.MOBIHeader.ChunkIndex = uint32(ltr + 1)
-	null.MOBIHeader.SkeletonIndex = uint32(ltr + 4)
-	null.MOBIHeader.GuideIndex = math.MaxUint32
+	null.MOBIHeader.Locale = matchLocale(m.Language)
 
 	// EXTH header
-	// null.EXTHSection.AddString(EXTHTitle, m.Title)
-	null.EXTHSection.AddString(t.EXTHAuthor, m.Author)
+	langString := fmt.Sprint(m.Language)
+	null.EXTHSection.AddString(t.EXTHTitle, m.Title)
 	null.EXTHSection.AddString(t.EXTHUpdatedTitle, m.Title)
-	null.EXTHSection.AddString(t.EXTHDocType, "EBOK")
-	null.EXTHSection.AddString(t.EXTHLanguage, "en")
-	null.EXTHSection.AddString(t.EXTHPublishingDate, "2020-12-31T14:45:45.113077+00:00")
-	null.EXTHSection.AddString(t.EXTHContributor, "calibre (4.23.0) [https://calibre-ebook.com]")
-	null.EXTHSection.AddString(t.EXTHSource, "calibre:1c984ebb-d396-46c8-9773-456f57e012de")
-	null.EXTHSection.AddString(t.EXTHAsin, "1c984ebb-d396-46c8-9773-456f57e012de")
-	null.EXTHSection.AddInt(t.EXTHKF8CountResources, 0)
-	null.EXTHSection.AddInt(t.EXTHCreatorSoftware, 201)
-	null.EXTHSection.AddInt(t.EXTHCreatorMajor, 2)
-	null.EXTHSection.AddInt(t.EXTHCreatorMinor, 9)
-	null.EXTHSection.AddInt(t.EXTHCreatorBuild, 0)
-	null.EXTHSection.AddString(t.EXTHCreatorBuildRev, "0730-890adc2")
-	if m.CoverImage <= len(m.Images) {
-		// null.EXTHSection.AddInt(EXTHCoverOffset, m.CoverImage)
-		// null.EXTHSection.AddInt(EXTHThumbOffset, m.CoverImage)
-		// null.EXTHSection.AddString(EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%03v", m.CoverImage+1))
+	null.EXTHSection.AddString(t.EXTHAuthor, m.Author)
+	null.EXTHSection.AddString(t.EXTHPublisher, m.Publisher)
+	null.EXTHSection.AddString(t.EXTHSubject, m.Subject)
+	null.EXTHSection.AddString(t.EXTHASIN, encodeID(m.UniqueID))
+	null.EXTHSection.AddString(t.EXTHLanguage, langString)
+	if m.PublishedDate != (time.Time{}) {
+		dateString := m.PublishedDate.Format("2006-01-02T15:04:05.000000+07:00")
+		null.EXTHSection.AddString(t.EXTHPublishingDate, dateString)
+	}
+	if len(m.DocType) > 0 {
+		null.EXTHSection.AddString(t.EXTHDocType, m.DocType)
+	} else {
+		null.EXTHSection.AddString(t.EXTHDocType, "EBOK")
+	}
+	if m.FixedLayout {
+		null.EXTHSection.AddString(t.EXTHFixedLayout, "true")
+	}
+	if m.RightToLeft {
+		null.EXTHSection.AddString(t.EXTHPrimaryWritingMode, "horizontal-rl")
+		null.EXTHSection.AddString(t.EXTHPageProgressionDirection, "rtl")
+	}
+	if m.CoverImage != nil {
+		null.EXTHSection.AddInt(t.EXTHCoverOffset, lastImageId)
+		null.EXTHSection.AddInt(t.EXTHHasFakeCover, 0)
+		null.EXTHSection.AddString(t.EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%04v", lastImageId+1))
+		lastImageId += 1
+	}
+	if m.ThumbImage != nil {
+		null.EXTHSection.AddInt(t.EXTHThumbOffset, lastImageId)
 	}
 
 	return null
+}
+
+func encodeID(id uint32) string {
+	// b := make([]byte, 4)
+	// pdb.Endian.PutUint32(b, id)
+	// return base32.HexEncoding.EncodeToString(b)
+
+	return fmt.Sprintf("%020v", id)
+}
+
+func watermark(null *r.NullRecord) {
+	null.EXTHSection.AddString(t.EXTHContributor, "go-mobi [https://github.com/leotaku/go-mobi]")
+	null.EXTHSection.AddString(t.EXTHSource, "go-mobi:00000000-0000-0000-0000-000000000000")
+	null.EXTHSection.AddInt(t.EXTHCreatorSoftware, 202)
+	null.EXTHSection.AddInt(t.EXTHCreatorMajor, 0)
+	null.EXTHSection.AddInt(t.EXTHCreatorMinor, 0)
+	null.EXTHSection.AddInt(t.EXTHCreatorBuild, 0)
+	null.EXTHSection.AddString(t.EXTHCreatorBuildRev, "0000-0000000")
 }

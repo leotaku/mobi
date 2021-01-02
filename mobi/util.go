@@ -1,39 +1,84 @@
 package mobi
 
 import (
-	"fmt"
+	"bytes"
+	"html/template"
 
 	"github.com/leotaku/manki/mobi/pdb"
 	r "github.com/leotaku/manki/mobi/records"
 )
 
-const preHTML = `<?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>Unknown</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <link rel="stylesheet" type="text/css" href="kindle:flow:0001?mime=text/css"/>
-<link rel="stylesheet" type="text/css" href="kindle:flow:0002?mime=text/css"/>
-</head>
-  <body class="calibre" aid="%04v">
-    </body>
-</html>`
-
-func chaptersToText(chaps []Chapter) (string, []r.ChunkInfo) {
+func chaptersToText(m MobiBook) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 	text := ""
-	info := make([]r.ChunkInfo, 0)
-	for i, chap := range chaps {
-		pre := fmt.Sprintf(preHTML, i)
-		info = append(info, r.ChunkInfo{
-			PreStart:      len(text),
-			PreLength:     len(pre),
-			ContentStart:  len(text) + len(pre),
-			ContentLength: len(chap.TextContent),
+	chunks := make([]r.ChunkInfo, 0)
+	chaps := make([]r.ChapterInfo, 0)
+
+	for I, chap := range m.Chapters {
+		chapStart := len(text)
+		for i, chunk := range chap.Chunks {
+			head, body, err := runChunk(chunk, m, I+i)
+			if err != nil {
+				return "", nil, nil, err
+			}
+			chunks = append(chunks, r.ChunkInfo{
+				PreStart:      len(text),
+				PreLength:     len(head),
+				ContentStart:  len(text) + len(head),
+				ContentLength: len(body),
+			})
+			text += head + body
+		}
+		chaps = append(chaps, r.ChapterInfo{
+			Title:  chap.Title,
+			Start:  chapStart,
+			Length: len(text) - chapStart,
 		})
-		text = text + pre + chap.TextContent
 	}
 
-	return text, info
+	return text, chunks, chaps, nil
+}
+
+func runChunk(c Chunk, m MobiBook, id int) (string, string, error) {
+	inventory := struct {
+		Mobi MobiBook
+		Id   int
+	}{
+		Mobi: m,
+		Id:   id,
+	}
+
+	head, err := runTemplate(c.Head, inventory)
+	if err != nil {
+		return "", "", err
+	}
+
+	body, err := runTemplate(c.Body, inventory)
+	if err != nil {
+		return "", "", err
+	}
+
+	return head, body, nil
+}
+
+var funcMap = template.FuncMap{
+	"inc": func(i int) int {
+		return i + 1
+	},
+}
+
+func runTemplate(s string, v interface{}) (string, error) {
+	t, err := template.New("placeholder").Funcs(funcMap).Parse(s)
+	if err != nil {
+		return "", err
+	}
+
+	buf := bytes.NewBuffer(nil)
+	err = t.Execute(buf, v)
+	if err != nil {
+		return "", err
+	}
+
+	return string(buf.Bytes()), nil
 }
 
 func genTextRecords(html string) []pdb.Record {
@@ -55,12 +100,6 @@ func genTextRecords(html string) []pdb.Record {
 
 		record := r.NewTBSTextRecord(html[from:min(to, len(html))])
 		records = append(records, record)
-	}
-
-	len := records[len(records)-1].Length()
-	if len%4 != 0 {
-		pad := make(pdb.RawRecord, len%4)
-		records = append(records, pad)
 	}
 
 	return records
