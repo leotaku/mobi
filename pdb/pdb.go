@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Endianness of values encoded in Palm databases.
+// Endian describes the byte-order of integers in Palm databases.
 var Endian = binary.BigEndian
 
 // Database represents an in-memory Palm database.
