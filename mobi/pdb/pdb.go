@@ -28,8 +28,23 @@ func NewDatabase(name string, date time.Time) Database {
 }
 
 // AddRecord adds a generic record to the Palm database.
-func (d *Database) AddRecord(r Record) {
+//
+// Returns the index of the inserted record.
+func (d *Database) AddRecord(r Record) int {
 	d.Records = append(d.Records, r)
+	return len(d.Records) - 1
+}
+
+// Idx returns the index of the last inserted record.
+func (d *Database) Idx() int {
+	return len(d.Records) - 1
+}
+
+// ReplaceRecord overrides the record at index i in the Palm database.
+//
+// Panics if index i is out of range.
+func (d *Database) ReplaceRecord(i int, r Record) {
+	d.Records[i] = r
 }
 
 // Write writes out the binary representation of the Palm database to w.
