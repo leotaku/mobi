@@ -5,7 +5,7 @@ import (
 	r "github.com/leotaku/mobi/records"
 )
 
-func chaptersToText(m MobiBook) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
+func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 	text := ""
 	chunks := make([]r.ChunkInfo, 0)
 	chaps := make([]r.ChapterInfo, 0)

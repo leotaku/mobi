@@ -15,14 +15,14 @@ import (
 	"golang.org/x/text/language"
 )
 
-// MobiBook represents all the information necessary to generate a
+// Book represents all the information necessary to generate a
 // KF8-style formatted MOBI or AZW3 book.
 //
-// You are expected to initialize MobiBook using the required
+// You are expected to initialize the Book struct using the required
 // variables and/or builder pattern, then convert the resulting
 // structure into a PalmDB database.  This database can then be
 // written out to any io.Writer.
-type MobiBook struct {
+type Book struct {
 	Title         string
 	Author        string
 	Publisher     string
@@ -57,7 +57,7 @@ type MobiBook struct {
 // chunk.  As it is relatively easy to end up with an invalid KF8
 // document by generating invalid skeleton sections, this option is
 // private and hidden behind a setter function.
-func (m *MobiBook) OverrideTemplate(tpl template.Template) MobiBook {
+func (m *Book) OverrideTemplate(tpl template.Template) Book {
 	m.tpl = &tpl
 	return *m
 }
@@ -79,7 +79,7 @@ type Chunk struct {
 }
 
 // Realize converts a MobiBook to a PalmDB Database.
-func (m MobiBook) Realize() pdb.Database {
+func (m Book) Realize() pdb.Database {
 	db := pdb.NewDatabase(m.Title, m.CreatedDate)
 	html, chunks, chaps, err := chaptersToText(m)
 	text := html + strings.Join(m.CSSFlows, "")
@@ -170,7 +170,7 @@ func (m MobiBook) Realize() pdb.Database {
 	return db
 }
 
-func (m MobiBook) createNullRecord() r.NullRecord {
+func (m Book) createNullRecord() r.NullRecord {
 	// Variables
 	null := r.NewNullRecord(m.Title)
 	lastImageID := len(m.Images)

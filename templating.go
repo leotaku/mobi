@@ -27,7 +27,7 @@ var funcMap = template.FuncMap{
 var defaultTemplate = template.Must(template.New("default").Funcs(funcMap).Parse(defaultTemplateString))
 
 type inventory struct {
-	Mobi    MobiBook
+	Mobi    Book
 	Chapter struct {
 		Title string
 		ID    int
@@ -37,7 +37,7 @@ type inventory struct {
 	}
 }
 
-func newInventory(m MobiBook, c Chapter, chapID int, chunkID int) inventory {
+func newInventory(m Book, c Chapter, chapID int, chunkID int) inventory {
 	return inventory{
 		Mobi: m,
 		Chapter: struct {
