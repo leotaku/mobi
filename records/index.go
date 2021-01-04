@@ -61,7 +61,7 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 		cncx := encodeCNCXString(s)
 		cncxEntries = append(cncxEntries, cncx)
 
-		label := encodeINDXString(fmt.Sprintf("%03v", chap.Start))
+		label := encodeINDXString(fmt.Sprintf("%03x", chap.Start))
 		bs := bytesSequential(pdb.Endian,
 			label,
 			calculateControlByte(t.TAGXTableChunk),
