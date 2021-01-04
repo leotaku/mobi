@@ -3,11 +3,19 @@ package records
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"io"
+	"strconv"
+	"strings"
 
 	"github.com/leotaku/mobi/pdb"
 	t "github.com/leotaku/mobi/types"
 )
+
+func To32(i int) string {
+	s := strconv.FormatInt(int64(i), 32)
+	return fmt.Sprintf("%04v", strings.ToUpper(s))
+}
 
 func encodeVwi(x int) []byte {
 	buf := make([]byte, 64)
