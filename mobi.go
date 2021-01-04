@@ -125,7 +125,7 @@ func (m Book) Realize() pdb.Database {
 
 	// NCX record
 	ncx, cncx := r.NCXIndexRecord(chaps)
-	nh := r.NCXHeaderIndexRecord(len(skeleton.IDXTEntries))
+	nh := r.NCXHeaderIndexRecord(len(chaps))
 	null.MOBIHeader.INDXRecordOffset = uint32(db.AddRecord(nh))
 	db.AddRecord(ncx)
 	db.AddRecord(cncx)
