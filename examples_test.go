@@ -17,7 +17,7 @@ func ExampleBook() {
 	}
 	mb := mobi.Book{
 		Title:       "De vita Caesarum librus",
-		Author:      "Sueton",
+		Authors:     []string{"Sueton"},
 		CreatedDate: time.Now(),
 		Language:    language.Italian,
 		Chapters:    []mobi.Chapter{ch},

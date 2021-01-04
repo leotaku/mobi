@@ -24,7 +24,8 @@ import (
 // written out to any io.Writer.
 type Book struct {
 	Title         string
-	Author        string
+	Authors       []string
+	Contributors  []string
 	Publisher     string
 	Subject       string
 	CreatedDate   time.Time
@@ -181,7 +182,8 @@ func (m Book) createNullRecord() r.NullRecord {
 	langString := fmt.Sprint(m.Language)
 	null.EXTHSection.AddString(t.EXTHTitle, m.Title)
 	null.EXTHSection.AddString(t.EXTHUpdatedTitle, m.Title)
-	null.EXTHSection.AddString(t.EXTHAuthor, m.Author)
+	null.EXTHSection.AddString(t.EXTHAuthor, m.Authors...)
+	null.EXTHSection.AddString(t.EXTHContributor, m.Contributors...)
 	null.EXTHSection.AddString(t.EXTHPublisher, m.Publisher)
 	null.EXTHSection.AddString(t.EXTHSubject, m.Subject)
 	null.EXTHSection.AddString(t.EXTHASIN, encodeASIN(m.UniqueID))
