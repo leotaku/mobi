@@ -179,7 +179,7 @@ func (m Book) createNullRecord() r.NullRecord {
 	null.MOBIHeader.Locale = matchLocale(m.Language)
 
 	// EXTH header
-	langString := fmt.Sprint(m.Language)
+	lang, _ := m.Language.Base()
 	null.EXTHSection.AddString(t.EXTHTitle, m.Title)
 	null.EXTHSection.AddString(t.EXTHUpdatedTitle, m.Title)
 	null.EXTHSection.AddString(t.EXTHAuthor, m.Authors...)
@@ -187,7 +187,7 @@ func (m Book) createNullRecord() r.NullRecord {
 	null.EXTHSection.AddString(t.EXTHPublisher, m.Publisher)
 	null.EXTHSection.AddString(t.EXTHSubject, m.Subject)
 	null.EXTHSection.AddString(t.EXTHASIN, encodeASIN(m.UniqueID))
-	null.EXTHSection.AddString(t.EXTHLanguage, langString)
+	null.EXTHSection.AddString(t.EXTHLanguage, lang.String())
 	if m.PublishedDate != (time.Time{}) {
 		dateString := m.PublishedDate.Format("2006-01-02T15:04:05.000000+07:00")
 		null.EXTHSection.AddString(t.EXTHPublishingDate, dateString)
