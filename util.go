@@ -15,10 +15,11 @@ func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 		m.tpl = defaultTemplate
 	}
 
-	for I, chap := range m.Chapters {
-		for i, chunk := range chap.Chunks {
-			inv := newInventory(m, chap, I, I+i)
+	chunkId := 0
+	for chapId, chap := range m.Chapters {
 		chapStart := text.Len()
+		for _, chunk := range chap.Chunks {
+			inv := newInventory(m, chap, chapId, chunkId)
 			head, err := runTemplate(*m.tpl, inv)
 			if err != nil {
 				return "", nil, nil, err
@@ -31,6 +32,7 @@ func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 			})
 			text.WriteString(head)
 			text.WriteString(chunk.Body)
+			chunkId++
 		}
 		chaps = append(chaps, r.ChapterInfo{
 			Title:  chap.Title,
