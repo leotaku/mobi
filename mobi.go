@@ -112,7 +112,7 @@ func (m Book) Realize() pdb.Database {
 
 	// Chunk record
 	chunk, cncx := r.ChunkIndexRecord(chunks)
-	ch := r.ChunkHeaderIndexRecord(len(text), len(m.Chapters))
+	ch := r.ChunkHeaderIndexRecord(len(text), len(chunks))
 	null.MOBIHeader.ChunkIndex = uint32(db.AddRecord(ch))
 	db.AddRecord(chunk)
 	db.AddRecord(cncx)
