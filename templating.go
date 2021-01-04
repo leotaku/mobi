@@ -13,8 +13,8 @@ const defaultTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
     <title>{{ .Mobi.Title }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     {{ range $i, $_ := .Mobi.CSSFlows }}
-    <link rel="stylesheet" type="text/css" href="kindle:flow:{{ $i | inc | printf "%03v" }}?mime=text/css"/>
     {{ end }}
+    <link rel="stylesheet" type="text/css" href="kindle:flow:{{ $i | inc | base32 }}?mime=text/css"/>
   </head>
   <body aid="{{ .Chunk.ID | base32 }}">
   </body>

@@ -207,7 +207,7 @@ func (m Book) createNullRecord() r.NullRecord {
 	if m.CoverImage != nil {
 		null.EXTHSection.AddInt(t.EXTHCoverOffset, lastImageID)
 		null.EXTHSection.AddInt(t.EXTHHasFakeCover, 0)
-		null.EXTHSection.AddString(t.EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%04v", lastImageID+1))
+		null.EXTHSection.AddString(t.EXTHKF8CoverURI, fmt.Sprintf("kindle:embed:%v", r.To32(lastImageID+1)))
 		lastImageID++
 	}
 	if m.ThumbImage != nil {
