@@ -1,12 +1,14 @@
 package mobi
 
 import (
+	"strings"
+
 	"github.com/leotaku/mobi/pdb"
 	r "github.com/leotaku/mobi/records"
 )
 
 func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
-	text := ""
+	text := new(strings.Builder)
 	chunks := make([]r.ChunkInfo, 0)
 	chaps := make([]r.ChapterInfo, 0)
 	if m.tpl == nil {
@@ -14,29 +16,30 @@ func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 	}
 
 	for I, chap := range m.Chapters {
-		chapStart := len(text)
 		for i, chunk := range chap.Chunks {
 			inv := newInventory(m, chap, I, I+i)
+		chapStart := text.Len()
 			head, err := runTemplate(*m.tpl, inv)
 			if err != nil {
 				return "", nil, nil, err
 			}
 			chunks = append(chunks, r.ChunkInfo{
-				PreStart:      len(text),
+				PreStart:      text.Len(),
 				PreLength:     len(head),
-				ContentStart:  len(text) + len(head),
+				ContentStart:  text.Len() + len(head),
 				ContentLength: len(chunk.Body),
 			})
-			text += head + chunk.Body
+			text.WriteString(head)
+			text.WriteString(chunk.Body)
 		}
 		chaps = append(chaps, r.ChapterInfo{
 			Title:  chap.Title,
 			Start:  chapStart,
-			Length: len(text) - chapStart,
+			Length: text.Len() - chapStart,
 		})
 	}
 
-	return text, chunks, chaps, nil
+	return text.String(), chunks, chaps, nil
 }
 
 func textToRecords(html string) []pdb.Record {
