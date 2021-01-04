@@ -114,7 +114,7 @@ func ChunkIndexRecord(info []ChunkInfo) (IndexRecord, CNCXRecord) {
 	cncxOffset := 0
 	for i, chunk := range info {
 		// CNCX entries
-		s := fmt.Sprintf("P-//*[@aid='%04v']", i)
+		s := fmt.Sprintf("P-//*[@aid='%v']", To32(i))
 		cncx := encodeCNCXString(s)
 		cncxEntries = append(cncxEntries, cncx)
 

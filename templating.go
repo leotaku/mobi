@@ -3,6 +3,8 @@ package mobi
 import (
 	"bytes"
 	"text/template"
+
+	r "github.com/leotaku/mobi/records"
 )
 
 const defaultTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
@@ -14,13 +16,16 @@ const defaultTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
     <link rel="stylesheet" type="text/css" href="kindle:flow:{{ $i | inc | printf "%03v" }}?mime=text/css"/>
     {{ end }}
   </head>
-  <body aid="{{ .Chunk.ID | printf "%04v" }}">
+  <body aid="{{ .Chunk.ID | base32 }}">
   </body>
 </html>`
 
 var funcMap = template.FuncMap{
 	"inc": func(i int) int {
 		return i + 1
+	},
+	"base32": func(i int) string {
+		return r.To32(i)
 	},
 }
 
