@@ -12,9 +12,9 @@ const defaultTemplateString = `<?xml version="1.0" encoding="UTF-8"?>
   <head>
     <title>{{ .Mobi.Title }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    {{ range $i, $_ := .Mobi.CSSFlows }}
-    {{ end }}
+    {{- range $i, $_ := .Mobi.CSSFlows }}
     <link rel="stylesheet" type="text/css" href="kindle:flow:{{ $i | inc | base32 }}?mime=text/css"/>
+    {{- end }}
   </head>
   <body aid="{{ .Chunk.ID | base32 }}">
   </body>
