@@ -5,7 +5,8 @@ import "golang.org/x/text/language"
 var matcher language.Matcher
 
 func matchLocale(lang language.Tag) uint32 {
-	match, _, _ := matcher.Match(lang)
+	_, index, _ := matcher.Match(lang)
+	match := SupportedLocales[index]
 	return uint32(localeCodeMap[match])
 }
 
