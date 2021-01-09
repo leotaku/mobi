@@ -50,8 +50,8 @@ func (d *Database) ReplaceRecord(i int, r Record) {
 
 // Write writes out the binary representation of the Palm database to w.
 func (d Database) Write(w io.Writer) error {
-	rlen := len(d.Records)
-	palmDBHeader := NewPalmDBHeader(d.Name, d.Date, uint16(rlen), uint32(rlen)*2-1)
+	rnum := len(d.Records)
+	palmDBHeader := NewPalmDBHeader(d.Name, d.Date, uint16(rnum), uint32(rnum)*2-1)
 	err := binary.Write(w, Endian, palmDBHeader)
 	if err != nil {
 		return err
