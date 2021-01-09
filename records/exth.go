@@ -61,17 +61,17 @@ func (e EXTHSection) Write(w io.Writer) error {
 }
 
 func (e EXTHSection) LengthWithoutPadding() int {
-	len := t.EXTHHeaderLength
+	length := t.EXTHHeaderLength
 	for _, entry := range e.entries {
-		len += entry.Length()
+		length += entry.Length()
 	}
 
-	return len
+	return length
 }
 
 func (e EXTHSection) Length() int {
-	len := e.LengthWithoutPadding()
-	return len + invMod(len, 4)
+	length := e.LengthWithoutPadding()
+	return length + invMod(length, 4)
 }
 
 type EXTHEntry struct {

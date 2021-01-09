@@ -42,10 +42,10 @@ func (r IndexRecord) Write(w io.Writer) error {
 	idxtLength := 0
 	idxtOffsets := make([]uint16, 0)
 	for _, entry := range r.IDXTEntries {
-		len := len(entry)
+		length := len(entry)
 		idxtOffsets = append(idxtOffsets, uint16(offset))
-		offset += len
-		idxtLength += len
+		offset += length
+		idxtLength += length
 	}
 	inh.IDXTStart = uint32(offset + idxtLength%4)
 	inh.IndexEntryCount = r.SubEntryCount

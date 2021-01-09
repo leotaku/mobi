@@ -10,13 +10,13 @@ import (
 )
 
 func TestPDBHeaderLength(t *testing.T) {
-	len := measure(pdb.PalmDBHeader{})
-	assertEq(t, len, pdb.PalmDBHeaderLength)
+	length := measure(pdb.PalmDBHeader{})
+	assertEq(t, length, pdb.PalmDBHeaderLength)
 }
 
 func TestRecordHeaderLength(t *testing.T) {
-	len := measure(pdb.RecordHeader{})
-	assertEq(t, len, pdb.RecordHeaderLength)
+	length := measure(pdb.RecordHeader{})
+	assertEq(t, length, pdb.RecordHeaderLength)
 }
 
 func TestReadWrite(t *testing.T) {
