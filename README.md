@@ -5,7 +5,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/leotaku/mobi.svg)](https://pkg.go.dev/github.com/leotaku/mobi)
 
 This package implements facilities to create KF8-formatted MOBI and AZW3 books.
-We also export the raw PalmDB format and various PalmDoc and MOBI components as a subpackages, which can be used to implement further formats that build on these formats.
+We also export the raw PalmDB writer and various PalmDoc, MOBI and KF8 components as subpackages, which can be used to implement other formats that build on these standards.
 
 ## References
 
