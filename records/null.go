@@ -26,10 +26,6 @@ func NewNullRecord(name string) NullRecord {
 	}
 }
 
-func (n NullRecord) Length() int {
-	return t.PalmDocHeaderLength + t.KF8HeaderLength + n.EXTHSection.Length() + len(n.FullName) + NullPaddingLength
-}
-
 func (n NullRecord) Write(w io.Writer) error {
 	// Set full name offset and length
 	n.MOBIHeader.FullNameOffset = uint32(t.PalmDocHeaderLength + t.KF8HeaderLength + n.EXTHSection.Length())

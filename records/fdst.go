@@ -33,7 +33,3 @@ func (r FDSTRecord) Write(w io.Writer) error {
 
 	return writeSequential(w, pdb.Endian, h, r.entries)
 }
-
-func (r FDSTRecord) Length() int {
-	return t.FDSTHeaderLength + len(r.entries)*t.FDSTEntryLength
-}

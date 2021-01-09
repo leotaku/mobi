@@ -44,10 +44,6 @@ func (r FLISRecord) Write(w io.Writer) error {
 	return binary.Write(w, pdb.Endian, r)
 }
 
-func (r FLISRecord) Length() int {
-	return FLISRecordLength
-}
-
 const FCISRecordLength = 52
 
 type FCISRecord struct {
@@ -88,10 +84,6 @@ func NewFCISRecord(TextLength uint32) FCISRecord {
 
 func (r FCISRecord) Write(w io.Writer) error {
 	return binary.Write(w, pdb.Endian, r)
-}
-
-func (r FCISRecord) Length() int {
-	return FCISRecordLength
 }
 
 const EOFRecordLength = 4

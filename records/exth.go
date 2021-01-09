@@ -36,20 +36,6 @@ func (e *EXTHSection) AddInt(tp t.EXTHEntryType, is ...int) {
 	}
 }
 
-func (e EXTHSection) LengthWithoutPadding() int {
-	len := t.EXTHHeaderLength
-	for _, entry := range e.entries {
-		len += entry.Length()
-	}
-
-	return len
-}
-
-func (e EXTHSection) Length() int {
-	len := e.LengthWithoutPadding()
-	return len + invMod(len, 4)
-}
-
 func (e EXTHSection) Write(w io.Writer) error {
 	lenNoPadding := e.LengthWithoutPadding()
 
@@ -74,6 +60,20 @@ func (e EXTHSection) Write(w io.Writer) error {
 	return err
 }
 
+func (e EXTHSection) LengthWithoutPadding() int {
+	len := t.EXTHHeaderLength
+	for _, entry := range e.entries {
+		len += entry.Length()
+	}
+
+	return len
+}
+
+func (e EXTHSection) Length() int {
+	len := e.LengthWithoutPadding()
+	return len + invMod(len, 4)
+}
+
 type EXTHEntry struct {
 	EntryType t.EXTHEntryType
 	Data      []byte
@@ -86,10 +86,6 @@ func NewEXTHEntry(tp t.EXTHEntryType, data []byte) EXTHEntry {
 	}
 }
 
-func (e EXTHEntry) Length() int {
-	return len(e.Data) + t.EXTHEntryHeaderLength
-}
-
 func (e EXTHEntry) Write(w io.Writer) error {
 	h := t.NewEXTHEntryHeader(e.EntryType, uint32(e.Length()))
 	err := binary.Write(w, pdb.Endian, h)
@@ -99,4 +95,8 @@ func (e EXTHEntry) Write(w io.Writer) error {
 
 	_, err = w.Write(e.Data)
 	return err
+}
+
+func (e EXTHEntry) Length() int {
+	return len(e.Data) + t.EXTHEntryHeaderLength
 }

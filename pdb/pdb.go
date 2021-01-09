@@ -57,16 +57,28 @@ func (d Database) Write(w io.Writer) error {
 		return err
 	}
 
+	// Offsets
+	buf := bytes.NewBuffer(nil)
+	initialOffset := PalmDBHeaderLength + RecordHeaderLength*len(d.Records) + 2
+	offsets := make([]int, 0)
+
+	// Write records
+	for _, rec := range d.Records {
+		offsets = append(offsets, initialOffset+buf.Len())
+		err := rec.Write(buf)
+		if err != nil {
+			return err
+		}
+	}
+
 	// Write record headers
-	offset := PalmDBHeaderLength + RecordHeaderLength*len(d.Records) + 2
-	for i, rec := range d.Records {
+	for i, offset := range offsets {
 		h := RecordHeader{
 			Offset:    uint32(offset),
 			Attribute: 0,             // No idea
 			Skip:      0,             // No idea
 			UniqueID:  uint16(i * 2), // Calibre doubles UID for some reason
 		}
-		offset += rec.Length()
 		err := binary.Write(w, Endian, h)
 		if err != nil {
 			return err
@@ -80,12 +92,10 @@ func (d Database) Write(w io.Writer) error {
 		return err
 	}
 
-	// Write records
-	for _, rec := range d.Records {
-		err := rec.Write(w)
-		if err != nil {
-			return err
-		}
+	// Write buffer
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		return err
 	}
 
 	// Success

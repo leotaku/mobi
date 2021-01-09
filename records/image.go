@@ -19,11 +19,6 @@ func NewImageRecord(img image.Image) ImageRecord {
 	}
 }
 
-func (r ImageRecord) Length() int {
-	r.maybeEncodeJPG()
-	return len(r.encoded)
-}
-
 func (r ImageRecord) Write(w io.Writer) error {
 	r.maybeEncodeJPG()
 	if r.error != nil {
