@@ -1,6 +1,6 @@
 # Go MOBI
 
-![Github Actions CI](https://github.com/leotaku/mobi/workflows/check/badge.svg)
+[![Github Actions CI](https://github.com/leotaku/mobi/workflows/check/badge.svg)](https://github.com/leotaku/mobi/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/leotaku/mobi)](https://goreportcard.com/report/github.com/leotaku/mobi)
 [![Go Reference](https://pkg.go.dev/badge/github.com/leotaku/mobi.svg)](https://pkg.go.dev/github.com/leotaku/mobi)
 
