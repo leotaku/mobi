@@ -3,7 +3,6 @@ package mobi
 import (
 	"strings"
 
-	"github.com/leotaku/mobi/pdb"
 	r "github.com/leotaku/mobi/records"
 )
 
@@ -44,8 +43,8 @@ func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 	return text.String(), chunks, chaps, nil
 }
 
-func textToRecords(html string) []pdb.Record {
-	records := []pdb.Record{}
+func textToRecords(html string) []r.TextRecord {
+	records := make([]r.TextRecord, 0)
 	recordCount := len(html) / r.TextRecordMaxSize
 	if len(html)%r.TextRecordMaxSize != 0 {
 		recordCount++
