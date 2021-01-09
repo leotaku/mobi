@@ -34,13 +34,17 @@ func TestReadWrite(t *testing.T) {
 
 	// Read
 	r := bytes.NewReader(w.Bytes())
-	db2, _ := pdb.ReadDatabase(r)
+	rdb, _ := pdb.ReadDatabase(r)
 
 	// Compare
-	assertEq(t, db.Name, db2.Name)
-	assertEq(t, len(db.Records), len(db2.Records))
+	assertEq(t, db.Name, rdb.Name)
+	assertEq(t, len(db.Records), len(rdb.Records))
 	for i := 0; i < len(db.Records); i++ {
-		assertEq(t, db.Records[i].Length(), db.Records[i].Length())
+		buf := bytes.NewBuffer(nil)
+		rbuf := bytes.NewBuffer(nil)
+		db.Records[i].Write(buf)
+		rdb.Records[i].Write(rbuf)
+		assertEq(t, buf.String(), rbuf.String())
 	}
 }
 
