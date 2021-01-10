@@ -40,11 +40,9 @@ func TestReadWrite(t *testing.T) {
 	assertEq(t, db.Name, rdb.Name)
 	assertEq(t, len(db.Records), len(rdb.Records))
 	for i := 0; i < len(db.Records); i++ {
-		buf := bytes.NewBuffer(nil)
-		rbuf := bytes.NewBuffer(nil)
-		db.Records[i].Write(buf)
-		rdb.Records[i].Write(rbuf)
-		assertEq(t, buf.String(), rbuf.String())
+		bs := writeRecord(db.Records[i])
+		rbs := writeRecord(rdb.Records[i])
+		assertEq(t, string(bs), string(rbs))
 	}
 }
 
@@ -52,6 +50,16 @@ func assertEq(t *testing.T, v1 interface{}, v2 interface{}) {
 	if v1 != v2 {
 		t.Errorf("Not equal: %v, %v", v1, v2)
 	}
+}
+
+func writeRecord(r pdb.Record) []byte {
+	buf := bytes.NewBuffer(nil)
+	err := r.Write(buf)
+	if err != nil {
+		panic(err)
+	}
+
+	return buf.Bytes()
 }
 
 func measure(v interface{}) int {
