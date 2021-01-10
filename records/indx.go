@@ -1,6 +1,7 @@
 package records
 
 import (
+	"encoding/binary"
 	"io"
 
 	"github.com/leotaku/mobi/pdb"
@@ -51,7 +52,7 @@ func (r IndexRecord) Write(w io.Writer) error {
 	inh.IndexEntryCount = r.SubEntryCount
 
 	// Write INDX header
-	err := writeSequential(w, pdb.Endian, inh)
+	err := binary.Write(w, pdb.Endian, inh)
 	if err != nil {
 		return err
 	}
@@ -66,16 +67,16 @@ func (r IndexRecord) Write(w io.Writer) error {
 
 	// Write entries
 	for _, entry := range r.IDXTEntries {
-		err := writeSequential(w, pdb.Endian, entry)
+		err := binary.Write(w, pdb.Endian, entry)
 		if err != nil {
 			return err
 		}
 	}
 
 	// Write IDXT and padding
-	pad1 := make([]byte, idxtLength%4)
-	pad2 := make([]byte, r.LengthNoPadding()%4)
-	return writeSequential(w, pdb.Endian, pad1, idh, idxtOffsets, pad2)
+	idxtPad := make([]byte, idxtLength%4)
+	postPad := make([]byte, r.LengthNoPadding()%4)
+	return writeSequential(w, pdb.Endian, idxtPad, idh, idxtOffsets, postPad)
 }
 
 func (r IndexRecord) Length() int {
