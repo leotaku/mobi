@@ -29,8 +29,14 @@ func Encode(w io.Writer, img image.Image, o *jpeg.Options) error {
 
 	// Connect header and body
 	body := buf.Bytes()[2:]
-	w.Write(naiveJFIFHeader)
-	w.Write(body)
+	_, err = w.Write(naiveJFIFHeader)
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(body)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
