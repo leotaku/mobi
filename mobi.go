@@ -2,7 +2,6 @@
 package mobi
 
 import (
-	"encoding/hex"
 	"fmt"
 	"image"
 	"strings"
@@ -218,7 +217,5 @@ func (m Book) createNullRecord() r.NullRecord {
 }
 
 func encodeASIN(id uint32) string {
-	b := make([]byte, 4)
-	pdb.Endian.PutUint32(b, id)
-	return hex.EncodeToString(b)
+	return fmt.Sprintf("%015x", id)
 }
