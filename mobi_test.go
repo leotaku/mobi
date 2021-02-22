@@ -3,11 +3,24 @@ package mobi_test
 import (
 	"bytes"
 	"encoding/binary"
+	"strings"
 	"testing"
 	"time"
 
+	"github.com/leotaku/mobi"
 	"github.com/leotaku/mobi/pdb"
 )
+
+func TestChunks(t *testing.T) {
+	as := strings.Repeat("a", 4096)
+	bs := strings.Repeat("b", 4096)
+	cs := strings.Repeat("c", 4096)
+	chunks := mobi.Chunks(as + bs + cs)
+
+	assertEq(t, as, chunks[0].Body)
+	assertEq(t, bs, chunks[1].Body)
+	assertEq(t, cs, chunks[2].Body)
+}
 
 func TestPDBHeaderLength(t *testing.T) {
 	length := measure(pdb.PalmDBHeader{})

@@ -1,5 +1,7 @@
 package mobi
 
+import "github.com/leotaku/mobi/records"
+
 func SingleChunks(ss ...string) []Chunk {
 	result := make([]Chunk, 0)
 	for _, s := range ss {
@@ -11,5 +13,16 @@ func SingleChunks(ss ...string) []Chunk {
 }
 
 func Chunks(s string) []Chunk {
-	panic("unimplemented")
+	result := make([]Chunk, 0)
+	for len(s) > records.TextRecordMaxSize {
+		body := s[:records.TextRecordMaxSize]
+		s = s[records.TextRecordMaxSize:]
+		result = append(result, Chunk{
+			Body: body,
+		})
+	}
+
+	return append(result, Chunk{
+		Body: s,
+	})
 }
