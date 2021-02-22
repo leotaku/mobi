@@ -62,6 +62,21 @@ func (m *Book) OverrideTemplate(tpl template.Template) Book {
 	return *m
 }
 
+// GetThumbFilename returns the filename a JPEG image in the Kindle
+// thumbnails folder would need to have in order to be correctly
+// associated with the generated book.
+//
+// Newer Kindle readers no longer respect the thumbnail embedded in
+// the Palm database but instead try to download the cover art from
+// Amazon's servers using the embedded ASIN identification string.
+// However, we can still get covers for sideloaded books by embedding
+// a fake ASIN identification string and manually copying an image to
+// the corresponding location inside the Kindle thumbnails folder.
+func (m Book) GetThumbFilename() string {
+	asin := encodeASIN(m.UniqueID)
+	return fmt.Sprintf("thumbnail_%v_EBOK_portrait.jpg", asin)
+}
+
 // Chapter represents a chapter in a MobiBook book.
 type Chapter struct {
 	Title  string
