@@ -13,7 +13,7 @@ func ExampleBook() {
 	// Create simple book with chapter
 	ch := mobi.Chapter{
 		Title:  "Chapter 1",
-		Chunks: mobi.SingleChunks(`Lorem ipsum dolor sit amet, consetetur sadipscing elitr.`),
+		Chunks: mobi.Chunks(`Lorem ipsum dolor sit amet, consetetur sadipscing elitr.`),
 	}
 	mb := mobi.Book{
 		Title:       "De vita Caesarum librus",
