@@ -20,4 +20,3 @@ func NewImageRecord(img image.Image) ImageRecord {
 func (r ImageRecord) Write(w io.Writer) error {
 	return jfif.Encode(w, r.img, nil)
 }
-
