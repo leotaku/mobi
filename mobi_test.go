@@ -23,10 +23,10 @@ func TestReadWrite(t *testing.T) {
 	// Write
 	w := bytes.NewBuffer(nil)
 	db := pdb.NewDatabase("Test Book", time.Unix(0, 0))
-	db.AddRecord(pdb.RawRecord{'o'})
-	db.AddRecord(pdb.RawRecord{'h', 'i'})
-	db.AddRecord(pdb.RawRecord{'c', 'a', 't'})
-	db.AddRecord(pdb.RawRecord{'t', 'r', 'e', 'e'})
+	db.AddRecord(pdb.RawRecord("dog"))
+	db.AddRecord(pdb.RawRecord("cat"))
+	db.AddRecord(pdb.RawRecord("fish"))
+	db.AddRecord(pdb.RawRecord("penguin"))
 	err := db.Write(w)
 	if err != nil {
 		t.Fatal(err)
