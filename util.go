@@ -44,7 +44,7 @@ func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 }
 
 func textToRecords(html string, chapters []r.ChapterInfo) []r.TextRecord {
-	provider := r.NewStrandProvider(chapters)
+	provider := r.NewTrailProvider(chapters)
 	records := make([]r.TextRecord, 0)
 	recordCount := len(html) / r.TextRecordMaxSize
 	if len(html)%r.TextRecordMaxSize != 0 {

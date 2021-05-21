@@ -9,7 +9,7 @@ type TextRecord struct {
 	trail []byte
 }
 
-func NewTextRecord(s string, trail StrandsData) TextRecord {
+func NewTextRecord(s string, trail TrailingData) TextRecord {
 	if len(s) > TextRecordMaxSize {
 		panic("TextRecord too large")
 	}
