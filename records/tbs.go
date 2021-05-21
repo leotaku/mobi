@@ -91,7 +91,6 @@ func (sd StrandData) Encode() []byte {
 	}
 	if sd.FlagFirstOfNotFirstStrand {
 		value |= 0b1000
-		panic("unreachable")
 	}
 
 	b := bytes.NewBuffer(nil)
