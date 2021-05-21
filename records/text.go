@@ -10,7 +10,7 @@ type TextRecord struct {
 
 func NewTextRecord(s string) TextRecord {
 	if len(s) > TextRecordMaxSize {
-		panic("TBSTextRecord too large")
+		panic("TextRecord too large")
 	}
 	return TextRecord{data: []byte(s)}
 }
