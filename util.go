@@ -43,7 +43,8 @@ func chaptersToText(m Book) (string, []r.ChunkInfo, []r.ChapterInfo, error) {
 	return text.String(), chunks, chaps, nil
 }
 
-func textToRecords(html string) []r.TextRecord {
+func textToRecords(html string, chapters []r.ChapterInfo) []r.TextRecord {
+	provider := r.NewStrandProvider(chapters)
 	records := make([]r.TextRecord, 0)
 	recordCount := len(html) / r.TextRecordMaxSize
 	if len(html)%r.TextRecordMaxSize != 0 {
@@ -52,10 +53,9 @@ func textToRecords(html string) []r.TextRecord {
 
 	for i := 0; i < recordCount; i++ {
 		from := i * r.TextRecordMaxSize
-		to := from + r.TextRecordMaxSize
-
-		record := r.NewTextRecord(html[from:min(to, len(html))])
-		records = append(records, record)
+		to := min(from+r.TextRecordMaxSize, len(html))
+		trail := provider.Get(from, to)
+		records = append(records, r.NewTextRecord(html[from:to], trail))
 	}
 
 	return records

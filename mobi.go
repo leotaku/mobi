@@ -98,7 +98,7 @@ func (m Book) Realize() pdb.Database {
 	db := pdb.NewDatabase(m.Title, m.CreatedDate)
 	html, chunks, chaps, err := chaptersToText(m)
 	text := html + strings.Join(m.CSSFlows, "")
-	textRecords := textToRecords(text)
+	textRecords := textToRecords(text, chaps)
 
 	// Handle possible template errors
 	if err != nil {

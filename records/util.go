@@ -35,6 +35,10 @@ func encodeVwi(x int) []byte {
 	return relevant
 }
 
+func encodeTrailingBytes(data []byte) []byte {
+	return append(data, encodeVwi(len(data))...)
+}
+
 func reverseBytes(buf []byte) {
 	for i, j := 0, len(buf)-1; i < j; i, j = i+1, j-1 {
 		buf[i], buf[j] = buf[j], buf[i]

@@ -129,7 +129,7 @@ func NewMOBIHeader() MOBIHeader {
 		FirstCompilationSectionCount:            0,
 		CompilationSectionCount:                 math.MaxUint32,
 		Unknown6:                                math.MaxUint32,
-		ExtraRecordDataFlags:                    0b01, // Should be '0b11' with indexing
+		ExtraRecordDataFlags:                    0b11,
 		INDXRecordOffset:                        math.MaxUint32,
 	}
 }
