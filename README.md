@@ -7,6 +7,12 @@
 This package implements facilities to create KF8-formatted MOBI and AZW3 books.
 We also export the raw PalmDB writer and various PalmDoc, MOBI and KF8 components as subpackages, which can be used to implement other formats that build on these standards.
 
+## Known issues
+
++ Chapters are supported but subchapters are not
++ Books without any text content are always malformed
++ Errors during template expansion result in a panic
+
 ## References
 
 + MobileRead Wiki
