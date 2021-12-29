@@ -95,8 +95,6 @@ func SkeletonIndexRecord(info []ChunkInfo) IndexRecord {
 			encodeVwi(1),
 			encodeVwi(chunk.PreStart),
 			encodeVwi(chunk.PreLength),
-			encodeVwi(chunk.PreStart),
-			encodeVwi(chunk.PreLength),
 		)
 		entries = append(entries, bs)
 	}
