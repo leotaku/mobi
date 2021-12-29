@@ -45,8 +45,17 @@ func reverseBytes(buf []byte) {
 	}
 }
 
-func invMod(dividend, divisor int) int {
-	return (divisor/2 + dividend) % divisor
+func invMod(a, n int) int {
+	return n - maxMod(a, n)
+}
+
+func maxMod(a, n int) int {
+	switch mod := a % n; mod {
+	case 0:
+		return n
+	default:
+		return mod
+	}
 }
 
 func calculateControlByte(tagx t.TAGXTagTable) byte {
