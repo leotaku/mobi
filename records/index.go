@@ -153,9 +153,9 @@ type ChapterInfo struct {
 	Length int
 }
 
-func encodeINDXString(s string) []byte {
-	length := byte(len(s))
-	return append([]byte{length}, s...)
+func encodeINDXString(label string) []byte {
+	length := byte(len(label))
+	return append([]byte{length}, label...)
 }
 
 func encodeCNCXString(label string) []byte {
