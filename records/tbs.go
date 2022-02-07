@@ -26,7 +26,7 @@ func (tp *TrailProvider) Get(from, to int) TrailingData {
 			break
 		}
 
-		if chap.Start >= from && chap.Start <= to || end >= from && end <= to {
+		if from <= chap.Start && chap.Start <= to || from <= end && end <= to {
 			if strands.Strands == nil {
 				strands.Strands = &StrandData{
 					Index:        i,
