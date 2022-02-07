@@ -12,9 +12,9 @@ func NewTrailProvider(chapters []ChapterInfo) TrailProvider {
 	}
 }
 
-func (s *TrailProvider) Get(from, to int) TrailingData {
+func (tp *TrailProvider) Get(from, to int) TrailingData {
 	strands := TrailingData{Multibyte: 0}
-	for i, chap := range s.chapters {
+	for i, chap := range tp.chapters {
 		end := chap.Start + chap.Length
 		if chap.Start < from && end > to {
 			strands.Strands = &StrandData{
