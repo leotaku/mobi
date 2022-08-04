@@ -29,6 +29,7 @@ func ExampleBook() {
 
 	// Write database to file
 	f, _ := os.Create("test.azw3")
+	defer f.Close()
 	err := db.Write(f)
 	if err != nil {
 		panic(err)
