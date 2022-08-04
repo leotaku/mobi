@@ -10,6 +10,7 @@ We also export the raw PalmDB writer and various PalmDoc, MOBI and KF8 component
 ## Known issues
 
 + Chapters are supported but subchapters are not
++ Old readers without KF8 are not supported (Kindle 1, 2 and DX)
 + Books without any text content are always malformed
 + Errors during template expansion result in a panic
 
