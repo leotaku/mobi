@@ -77,13 +77,13 @@ func (m Book) GetThumbFilename() string {
 	return fmt.Sprintf("thumbnail_%v_EBOK_portrait.jpg", asin)
 }
 
-// Chapter represents a chapter in a MobiBook book.
+// Chapter represents a chapter in a Book.
 type Chapter struct {
 	Title  string
 	Chunks []Chunk
 }
 
-// Chunk represents a chunk of text in a MobiBook Chapter.
+// Chunk represents a chunk of text in a Chapter.
 //
 // Chunks are mostly an implementation detail that is exposed for
 // maximum control over the final book output.  Generally, you should
@@ -93,7 +93,7 @@ type Chunk struct {
 	Body string
 }
 
-// Realize converts a MobiBook to a PalmDB Database.
+// Realize converts a Book to a PalmDB Database.
 func (m Book) Realize() pdb.Database {
 	db := pdb.NewDatabase(m.Title, m.CreatedDate)
 	html, chunks, chaps, err := chaptersToText(m)
