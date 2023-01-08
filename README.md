@@ -28,4 +28,4 @@ Huge thanks to the authors of these resources.
 
 ## License
 
-[MIT](./LICENSE) © Leo Gaskin 2020-2022
+[MIT](./LICENSE) © Leo Gaskin 2020-2023
