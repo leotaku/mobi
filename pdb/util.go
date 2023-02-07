@@ -6,7 +6,7 @@ import (
 )
 
 func trimZeroes(s string) string {
-	return strings.TrimRight(s, "\0000")
+	return strings.TrimRight(s, "\x00")
 }
 
 func calculatePalmTime(t time.Time) uint32 {
