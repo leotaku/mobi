@@ -20,9 +20,11 @@ var naiveJFIFHeader = []byte{
 	0x00, 0x00, // No Thumbnail
 }
 
-func Encode(w io.Writer, img image.Image, o *jpeg.Options) error {
+// Encode writes the Image m to w in JFIF 1.02 compatible format with
+// the given options. The JFIF header cannot be configured.
+func Encode(w io.Writer, m image.Image, o *jpeg.Options) error {
 	buf := bytes.NewBuffer(nil)
-	err := jpeg.Encode(buf, img, o)
+	err := jpeg.Encode(buf, m, o)
 	if err != nil {
 		return err
 	}
