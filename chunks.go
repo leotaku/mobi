@@ -5,9 +5,9 @@ package mobi
 // In the resulting list of chunks, each chunk exactly corresponds the
 // given string with the same index.  In almost all cases, this is the
 // preferred method of converting KF8 HTML into a list of chunks.
-func Chunks(ss ...string) []Chunk {
+func Chunks(strings ...string) []Chunk {
 	result := make([]Chunk, 0)
-	for _, s := range ss {
+	for _, s := range strings {
 		result = append(result, Chunk{
 			Body: s,
 		})
