@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"io"
-	"io/ioutil"
 	"time"
 )
 
@@ -104,7 +103,7 @@ func (d Database) Write(w io.Writer) error {
 
 // ReadDatabase reads an uninterpreted Palm database from r.
 func ReadDatabase(r io.Reader) (*Database, error) {
-	data, err := ioutil.ReadAll(r)
+	data, err := io.ReadAll(r)
 	b := bytes.NewReader(data)
 	if err != nil {
 		return nil, err
