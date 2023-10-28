@@ -117,7 +117,10 @@ func (m Book) Realize() pdb.Database {
 	}
 
 	// Padding
-	lastLength := textRecords[len(textRecords)-1].Length()
+	lastLength := 0
+	if len(textRecords) > 0 {
+		lastLength = textRecords[len(textRecords)-1].Length()
+	}
 	if lastLength%4 != 0 {
 		pad := make(pdb.RawRecord, lastLength%4)
 		db.AddRecord(pad)
