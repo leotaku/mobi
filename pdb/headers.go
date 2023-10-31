@@ -24,7 +24,7 @@ type PalmDBHeader struct {
 func NewPalmDBHeader(name string, dateTime time.Time, numRecords uint16, lastRecordUID uint32) PalmDBHeader {
 	nameBytes := [32]byte{}
 	copy(nameBytes[:31], name)
-	palmTime := calculatePalmTime(dateTime)
+	palmTime := convertToPalmTime(dateTime)
 
 	return PalmDBHeader{
 		Name:               nameBytes,
