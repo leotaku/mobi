@@ -18,7 +18,7 @@ type Database struct {
 	Records []Record
 }
 
-// NewDatabase creates an empty Palm database with name.
+// NewDatabase creates an empty Palm database with name and date.
 func NewDatabase(name string, date time.Time) Database {
 	return Database{
 		Name:    trimZeroes(name),
@@ -102,6 +102,9 @@ func (d Database) Write(w io.Writer) error {
 }
 
 // ReadDatabase reads an uninterpreted Palm database from r.
+//
+// This is not a lossless routine, in particular a large portion of
+// metadata stored in the Palm database header will be ignored.
 func ReadDatabase(r io.Reader) (*Database, error) {
 	data, err := io.ReadAll(r)
 	b := bytes.NewReader(data)

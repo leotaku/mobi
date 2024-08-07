@@ -12,6 +12,7 @@ import (
 	t "github.com/leotaku/mobi/types"
 )
 
+// To32 converts an integer to a content identifier string.
 func To32(i int) string {
 	s := strconv.FormatInt(int64(i), 32)
 	return fmt.Sprintf("%04v", strings.ToUpper(s))
