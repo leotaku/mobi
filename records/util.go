@@ -58,6 +58,8 @@ func maxMod(a, n int) int {
 	}
 }
 
+var bitmaskToShiftMap = map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 2, 8: 3, 12: 2, 16: 4, 32: 5, 48: 4, 64: 6, 128: 7, 192: 6}
+
 func calculateControlByte(tagx t.TAGXTagTable) byte {
 	cbs := make([]byte, 0)
 	ans := uint8(0)
@@ -76,8 +78,6 @@ func calculateControlByte(tagx t.TAGXTagTable) byte {
 
 	return cbs[0]
 }
-
-var bitmaskToShiftMap = map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 2, 8: 3, 12: 2, 16: 4, 32: 5, 48: 4, 64: 6, 128: 7, 192: 6}
 
 func mapTagToNvals(tag t.TAGXTag) byte {
 	switch tag {
