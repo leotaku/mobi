@@ -57,8 +57,7 @@ func NCXIndexRecord(info []ChapterInfo) (IndexRecord, CNCXRecord) {
 	cncxOffset := 0
 	for _, chap := range info {
 		// CNCX entries
-		s := fmt.Sprintf(chap.Title)
-		cncx := encodeCNCXString(s)
+		cncx := encodeCNCXString(chap.Title)
 		cncxEntries = append(cncxEntries, cncx)
 
 		label := encodeINDXString(fmt.Sprintf("%03x", chap.Start))
